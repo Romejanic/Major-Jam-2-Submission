@@ -24,19 +24,26 @@ public class SpriteRenderer {
 		if(batches.isEmpty())
 			return; // we do nothing =D
 		// bind everything
-		SpriteMesh.get().bind();
+		SpriteMesh mesh = SpriteMesh.get();
+		mesh.bind();
 		this.spritesheet.bind(0);
 		// draw each batch
 		for(SpriteData spriteData : batches.keySet()) {
-			
+			// TODO: set texture coordinate uniforms
+			List<Sprite> batch = batches.get(spriteData);
+			for(Sprite sprite : batch) {
+				// TODO: set transform uniform
+				mesh.draw();
+			}
 		}
 		// unbind everything
 		this.spritesheet.unbind();
-		SpriteMesh.get().unbind();
+		mesh.unbind();
 	}
 	
 	protected void destroy() {
 		SpriteMesh.get().delete();
+		this.spritesheet.delete();
 	}
 	
 	public void notify(Sprite sprite) {
