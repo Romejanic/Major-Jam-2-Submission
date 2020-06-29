@@ -1,6 +1,7 @@
 package com.jam.util;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 
 import com.google.gson.Gson;
@@ -17,6 +18,18 @@ public class Util {
 			throw new FileNotFoundException(fullPath);
 		}
 		return in;
+	}
+	
+	public static String readFully(String resourceName) throws IOException {
+		InputStream in = getResource(resourceName);
+		StringBuilder sb = new StringBuilder();
+		byte[] buf = new byte[1024];
+		int i;
+		while((i = in.read(buf)) != -1) {
+			sb.append(new String(buf, 0, i));
+		}
+		in.close();
+		return sb.toString();
 	}
 	
 }

@@ -5,7 +5,7 @@ import static org.lwjgl.opengl.GL32.*;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import org.lwjgl.system.MemoryStack;
+import org.lwjgl.BufferUtils;
 
 import com.jam.util.Util;
 
@@ -40,9 +40,10 @@ public class Texture {
 		// load texture data
 		PNGDecoder in = new PNGDecoder(Util.getResource("sprites.png"));
 		Texture   tex = new Texture(GL_TEXTURE_2D, 0);
-		try(MemoryStack stack = MemoryStack.stackPush()) {
+//		try(MemoryStack stack = MemoryStack.stackPush()) {
 			// read texture data into buffer
-			ByteBuffer data = stack.calloc(in.getWidth() * in.getHeight() * 4);
+//			ByteBuffer data = stack.calloc(in.getWidth() * in.getHeight() * 4);
+			ByteBuffer data = BufferUtils.createByteBuffer(in.getWidth() * in.getHeight() * 4);
 			in.decode(data, in.getWidth(), Format.RGBA);
 			data.flip();
 			// create opengl texture
@@ -56,7 +57,7 @@ public class Texture {
 			glTexParameteri(tex.target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 			glTexParameteri(tex.target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 			tex.unbind();
-		}
+//		}
 		// and we're done
 		return tex;
 	}

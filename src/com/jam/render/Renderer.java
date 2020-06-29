@@ -2,6 +2,9 @@ package com.jam.render;
 
 import org.lwjgl.opengl.GL;
 
+import com.jam.render.sprites.Sprite;
+import com.jam.render.sprites.SpriteList;
+
 import static org.lwjgl.opengl.GL32.*;
 
 public class Renderer {
@@ -18,6 +21,10 @@ public class Renderer {
 		glCullFace(GL_BACK);
 		// init other renderers
 		this.spriteRenderer.init();
+		// test code
+		Sprite sprite = new Sprite(SpriteList.getSprite("test"));
+		sprite.transform.scale.mul(0.5f);
+		this.spriteRenderer.notify(sprite);
 	}
 	
 	public void render() {

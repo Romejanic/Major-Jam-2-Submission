@@ -10,12 +10,12 @@ public class SpriteMesh {
 
 	private static final float[] VERTICES = {
 		-1.0f, -1.0f,
-		 1.0f, -1.0f,
 		-1.0f,  1.0f,
+		 1.0f, -1.0f,
 		
 		 1.0f, -1.0f,
-		-1.0f,  1.0f,
-		 1.0f,  1.0f
+		 1.0f,  1.0f,
+		-1.0f,  1.0f
 	};
 
 	private static SpriteMesh singleton;

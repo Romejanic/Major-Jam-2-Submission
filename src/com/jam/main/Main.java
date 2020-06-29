@@ -78,8 +78,9 @@ public class Main {
 			System.err.print("Caused by ");
 			e.printStackTrace(System.err);
 			JOptionPane.showMessageDialog(
-				null, "Crashed!",
+				null,
 				"Sorry, the game has crashed!\nHere is the error message:\n\n" + e.toString(),
+				"Crashed!",
 				JOptionPane.ERROR_MESSAGE
 			);
 		}
