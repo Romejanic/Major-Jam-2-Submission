@@ -1,7 +1,6 @@
 package com.jam.render.sprites;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 
@@ -14,8 +13,7 @@ public class SpriteList {
 	private static final HashMap<String,SpriteData> spriteMap = new HashMap<String,SpriteData>();
 	
 	public static void load() throws IOException {
-		InputStream in = SpriteList.class.getResourceAsStream("/res/sprites.json");
-		JsonReader reader = new JsonReader(new InputStreamReader(in));
+		JsonReader reader = new JsonReader(new InputStreamReader(Util.getResource("sprites.json")));
 		JsonObject spriteJson = Util.GSON.fromJson(reader, JsonObject.class);
 		for(String key : spriteJson.keySet()) {
 			SpriteData data = Util.GSON.fromJson(spriteJson.get(key), SpriteData.class);

@@ -2,17 +2,13 @@ package com.jam.render;
 
 import org.lwjgl.opengl.GL;
 
-import com.jam.render.sprites.SpriteMesh;
-
 import static org.lwjgl.opengl.GL32.*;
 
 public class Renderer {
-
-	private int width, height;
 	
 	private SpriteRenderer spriteRenderer = new SpriteRenderer();
 	
-	public void init() {
+	public void init() throws Exception {
 		GL.createCapabilities();
 		// init gl
 		glClearColor(0.4f, 0.6f, 0.9f, 1f);
@@ -34,8 +30,6 @@ public class Renderer {
 	}
 	
 	public void updateSize(int width, int height) {
-		this.width = width;
-		this.height = height;
 		glViewport(0, 0, width, height);
 	}
 	
