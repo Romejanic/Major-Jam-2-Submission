@@ -2,18 +2,14 @@ package com.jam.rooms;
 
 import com.jam.actors.PlayerActor;
 import com.jam.math.Color;
-import com.jam.render.SpriteRenderer;
 import com.jam.render.sprites.SpriteList;
 import com.jam.room.Actor;
 import com.jam.room.Room;
+import com.jam.ui.UiButton;
 
 public class TestRoom extends Room {
 
 	private Actor testSprite;
-	
-	public TestRoom(SpriteRenderer spriteRenderer) {
-		super(spriteRenderer);
-	}
 
 	@Override
 	public void populate() {
@@ -23,6 +19,8 @@ public class TestRoom extends Room {
 		
 		PlayerActor player = this.addActor(new PlayerActor());
 		player.transform.position.x += 3f;
+		
+		this.addUiElement(new UiButton("btn_play", 0, 0, this));
 	}
 	
 	@Override

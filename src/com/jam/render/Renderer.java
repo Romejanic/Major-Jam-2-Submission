@@ -6,12 +6,15 @@ import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
 
+import com.jam.render.data.Texture;
 import com.jam.room.Room;
 
 public class Renderer {
 	
 	private SpriteRenderer spriteRenderer = new SpriteRenderer();
 	private UiRenderer uiRenderer = new UiRenderer();
+	
+	private Texture spritesheet;
 	
 	private float delta = 1f;
 	private float lastFrame = 0f;
@@ -28,6 +31,8 @@ public class Renderer {
 		glClearColor(0.4f, 0.6f, 0.9f, 1f);
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
+		// load spritesheet
+		this.spritesheet = Texture.load("sprites.png");
 		// init other renderers
 		this.spriteRenderer.init();
 		this.uiRenderer.init();
@@ -42,8 +47,10 @@ public class Renderer {
 		Matrix4f camMatrix = this.camera.calcCameraMatrix(this.width, this.height);
 		// draw frame
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		this.spritesheet.bind(0);
 		this.spriteRenderer.render(camMatrix);
 		this.uiRenderer.render(this.width, this.height);
+		this.spritesheet.unbind();
 		// check for OpenGL errors
 		int err;
 		do {
@@ -57,6 +64,7 @@ public class Renderer {
 	public void destroy() {
 		this.spriteRenderer.destroy();
 		this.uiRenderer.destroy();
+		this.spritesheet.delete();
 	}
 	
 	public void updateSize(int width, int height) {
@@ -71,7 +79,8 @@ public class Renderer {
 	
 	public <T extends Room> T createRoom(Class<T> clazz) {
 		try {
-			T room = clazz.getConstructor(SpriteRenderer.class).newInstance(this.spriteRenderer);
+			T room = clazz.newInstance();
+			room.updateRenderers(this.spriteRenderer, this.uiRenderer);
 			return room;
 		} catch (Exception e) {
 			System.err.println("Failed to create room from " + clazz.toString());

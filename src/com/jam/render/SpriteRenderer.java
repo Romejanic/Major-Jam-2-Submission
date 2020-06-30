@@ -9,7 +9,6 @@ import java.util.List;
 import org.joml.Matrix4fc;
 
 import com.jam.render.data.Shader;
-import com.jam.render.data.Texture;
 import com.jam.render.sprites.Sprite;
 import com.jam.render.sprites.SpriteList;
 import com.jam.render.sprites.SpriteList.SpriteData;
@@ -18,15 +17,12 @@ import com.jam.render.sprites.SpriteMesh;
 public class SpriteRenderer {
 
 	private final HashMap<SpriteData,List<Sprite>> batches = new HashMap<SpriteData,List<Sprite>>();
-	
-	private Texture spritesheet;
 	private Shader spriteShader;
 	
 	protected void init() throws Exception {
 		// load data
 		SpriteList.load();
 		SpriteMesh.get();
-		this.spritesheet = Texture.load("sprites.png");
 		this.spriteShader = Shader.load("sprite");
 	}
 	
@@ -38,7 +34,6 @@ public class SpriteRenderer {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		SpriteMesh mesh = SpriteMesh.get();
 		mesh.bind();
-		this.spritesheet.bind(0);
 		this.spriteShader.bind();
 		glUniform1i(this.spriteShader.getUniform("spritesheet"), 0);
 		this.spriteShader.uniformMat4("cameraTransform", camMatrix);
@@ -56,14 +51,12 @@ public class SpriteRenderer {
 		}
 		// unbind everything
 		this.spriteShader.unbind();
-		this.spritesheet.unbind();
 		mesh.unbind();
 		glDisable(GL_BLEND);
 	}
 	
 	protected void destroy() {
 		SpriteMesh.get().delete();
-		this.spritesheet.delete();
 		this.spriteShader.delete();
 	}
 	

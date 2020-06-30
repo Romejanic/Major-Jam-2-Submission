@@ -34,6 +34,8 @@ public class UiRenderer {
 		this.shader.uniformMat4("projMat", this.projMat);
 		{
 			for(UiSprite sprite : this.sprites) {
+				if(!sprite.enabled) continue;
+				sprite.preRender();
 				this.shader.uniformMat4("transform", sprite.getTransform());
 				this.shader.uniformSpriteData("spriteInfo", sprite.sprite);
 				sprite.tint.uniformColor(this.shader, "tintColor");
@@ -51,7 +53,16 @@ public class UiRenderer {
 	}
 	
 	private void updateProjMat(int w, int h) {
-		this.projMat.setOrtho(0f, w, h, 0f, -1f, 1f);
+		this.projMat.setOrthoSymmetric(w, h, -1f, 1f);
+	}
+	
+	public void notify(UiSprite sprite) {
+		this.sprites.add(sprite);
+	}
+	
+	public void denotify(UiSprite sprite) {
+		if(!this.sprites.contains(sprite)) return;
+		this.sprites.remove(sprite);
 	}
 	
 }
