@@ -9,6 +9,7 @@ public class Sprite {
 	public final Transform2D transform = new Transform2D();
 	public SpriteData sprite;
 	public Color tint = new Color(Color.WHITE);
+	public boolean enabled = true;
 	
 	public Sprite(SpriteData sprite) {
 		this.sprite = sprite;

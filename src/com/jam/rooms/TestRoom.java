@@ -5,6 +5,7 @@ import com.jam.render.SpriteRenderer;
 import com.jam.render.sprites.SpriteList;
 import com.jam.room.Actor;
 import com.jam.room.Room;
+import com.jam.ui.ButtonActor;
 
 public class TestRoom extends Room {
 
@@ -19,6 +20,10 @@ public class TestRoom extends Room {
 		this.testSprite = this.newActorWithSprite(SpriteList.getSprite("wood_floor"));
 		this.testSprite.getSpriteAt(0).transform.rotation.rotateZ(0.4f);
 		this.addActor(new PlayerActor());
+		
+		this.addActor(new ButtonActor("btn_play").setListener(() -> {
+			System.out.println("i've been pressed!");
+		}));
 	}
 	
 	@Override

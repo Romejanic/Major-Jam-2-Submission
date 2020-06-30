@@ -49,6 +49,7 @@ public class SpriteRenderer {
 			glUniform4i(this.spriteShader.getUniform("spriteInfo"), spriteData.x, spriteData.y, spriteData.w, spriteData.h);
 			List<Sprite> batch = batches.get(spriteData);
 			for(Sprite sprite : batch) {
+				if(!sprite.enabled) continue;
 				sprite.transform.update();
 				this.uniformMat4("transform", sprite.transform.toMatrix());
 				sprite.tint.uniformColor(this.spriteShader, "tintColor");

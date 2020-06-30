@@ -68,6 +68,7 @@ public class Main {
 		this.currentRoom.populate();
 		// loop
 		while(!glfwWindowShouldClose(window)) {
+			input.update();
 			this.currentRoom.update(renderer.getDeltaTime());
 			renderer.render();
 			glfwSwapBuffers(window);
