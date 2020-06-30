@@ -51,6 +51,7 @@ public class SpriteRenderer {
 			for(Sprite sprite : batch) {
 				sprite.transform.update();
 				this.uniformMat4("transform", sprite.transform.toMatrix());
+				sprite.tint.uniformColor(this.spriteShader, "tintColor");
 				mesh.draw();
 			}
 		}
