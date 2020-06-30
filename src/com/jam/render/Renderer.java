@@ -7,6 +7,7 @@ import com.jam.render.sprites.SpriteList;
 
 import static org.lwjgl.opengl.GL32.*;
 
+import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
 
 public class Renderer {
@@ -15,7 +16,10 @@ public class Renderer {
 	
 	private float delta = 1f;
 	private float lastFrame = 0f;
+	private int width;
+	private int height;
 	
+	private Camera camera = new Camera();
 	private Sprite testSprite;
 	
 	public void init() throws Exception {
@@ -41,9 +45,11 @@ public class Renderer {
 		lastFrame = time;
 		// spin sprite
 		testSprite.transform.rotation.rotateZ(delta);
+		// update camera
+		Matrix4f camMatrix = this.camera.calcCameraMatrix(this.width, this.height);
 		// draw frame
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		this.spriteRenderer.render();
+		this.spriteRenderer.render(camMatrix);
 		// check for OpenGL errors
 		int err;
 		do {
@@ -59,6 +65,8 @@ public class Renderer {
 	}
 	
 	public void updateSize(int width, int height) {
+		this.width = width;
+		this.height = height;
 		glViewport(0, 0, width, height);
 	}
 	

@@ -32,7 +32,7 @@ public class SpriteRenderer {
 		this.spriteShader = Shader.load("sprite");
 	}
 	
-	protected void render() {
+	protected void render(Matrix4fc camMatrix) {
 		if(batches.isEmpty())
 			return; // we do nothing =D
 		// bind everything
@@ -43,6 +43,7 @@ public class SpriteRenderer {
 		this.spritesheet.bind(0);
 		this.spriteShader.bind();
 		glUniform1i(this.spriteShader.getUniform("spritesheet"), 0);
+		uniformMat4("cameraTransform", camMatrix);
 		// draw each batch
 		for(SpriteData spriteData : batches.keySet()) {
 			glUniform4i(this.spriteShader.getUniform("spriteInfo"), spriteData.x, spriteData.y, spriteData.w, spriteData.h);
