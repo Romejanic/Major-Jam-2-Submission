@@ -7,5 +7,4 @@ uniform sampler2D spritesheet;
 
 void main(void) {
 	fragColor = texture(spritesheet, texCoords);
-	fragColor.a = 1.;
 }

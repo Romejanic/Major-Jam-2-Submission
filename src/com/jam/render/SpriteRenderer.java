@@ -36,14 +36,16 @@ public class SpriteRenderer {
 		if(batches.isEmpty())
 			return; // we do nothing =D
 		// bind everything
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		SpriteMesh mesh = SpriteMesh.get();
 		mesh.bind();
 		this.spritesheet.bind(0);
 		this.spriteShader.bind();
-		glUniform1i(this.spriteShader.getUniformLocation("spritesheet"), 0);
+		glUniform1i(this.spriteShader.getUniform("spritesheet"), 0);
 		// draw each batch
 		for(SpriteData spriteData : batches.keySet()) {
-			glUniform4i(this.spriteShader.getUniformLocation("spriteInfo"), spriteData.x, spriteData.y, spriteData.w, spriteData.h);
+			glUniform4i(this.spriteShader.getUniform("spriteInfo"), spriteData.x, spriteData.y, spriteData.w, spriteData.h);
 			List<Sprite> batch = batches.get(spriteData);
 			for(Sprite sprite : batch) {
 				sprite.transform.update();
@@ -55,6 +57,7 @@ public class SpriteRenderer {
 		this.spriteShader.unbind();
 		this.spritesheet.unbind();
 		mesh.unbind();
+		glDisable(GL_BLEND);
 	}
 	
 	protected void destroy() {
@@ -65,7 +68,7 @@ public class SpriteRenderer {
 	
 	public void notify(Sprite sprite) {
 		List<Sprite> batch = batches.get(sprite.sprite);
-		if(!batches.containsKey(sprite.sprite)) {
+		if(batch == null) {
 			batch = new ArrayList<Sprite>();
 			batches.put(sprite.sprite, batch);
 		}
@@ -83,8 +86,7 @@ public class SpriteRenderer {
 	private void uniformMat4(String name, Matrix4fc matrix) {
 		try(MemoryStack stack = MemoryStack.stackPush()) {
 			FloatBuffer buffer = stack.callocFloat(16);
-			matrix.get(buffer);
-			glUniformMatrix4fv(this.spriteShader.getUniformLocation(name), false, buffer);
+			glUniformMatrix4fv(this.spriteShader.getUniform(name), false, matrix.get(buffer));
 		}
 	}
 	

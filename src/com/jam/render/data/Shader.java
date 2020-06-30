@@ -29,7 +29,7 @@ public class Shader {
 		glDeleteProgram(this.program);
 	}
 	
-	public int getUniformLocation(String name) {
+	public int getUniform(String name) {
 		if(!this.uniforms.containsKey(name)) {
 			int location = glGetUniformLocation(this.program, name);
 			if(location < 0) {

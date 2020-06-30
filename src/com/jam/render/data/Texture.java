@@ -44,7 +44,7 @@ public class Texture {
 			// read texture data into buffer
 //			ByteBuffer data = stack.calloc(in.getWidth() * in.getHeight() * 4);
 			ByteBuffer data = BufferUtils.createByteBuffer(in.getWidth() * in.getHeight() * 4);
-			in.decode(data, in.getWidth(), Format.RGBA);
+			in.decode(data, in.getWidth() * 4, Format.RGBA);
 			data.flip();
 			// create opengl texture
 			tex.texture = glGenTextures();

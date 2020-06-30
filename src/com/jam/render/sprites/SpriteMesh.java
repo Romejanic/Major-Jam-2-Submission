@@ -32,7 +32,7 @@ public class SpriteMesh {
 		this.bind();
 		glBindBuffer(GL_ARRAY_BUFFER, this.vbo);
 		try(MemoryStack stack = MemoryStack.stackPush()) {
-			FloatBuffer buffer = stack.callocFloat(VERTICES.length).put(VERTICES);
+			FloatBuffer buffer = (FloatBuffer)stack.callocFloat(VERTICES.length).put(VERTICES).flip();
 			glBufferData(GL_ARRAY_BUFFER, buffer, GL_STATIC_DRAW);
 		}
 		glVertexAttribPointer(0, 2, GL_FLOAT, false, 0, 0);
@@ -42,9 +42,11 @@ public class SpriteMesh {
 	
 	public void bind() {
 		glBindVertexArray(this.vao);
+		glEnableVertexAttribArray(0);
 	}
 	
 	public void unbind() {
+		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
 	}
 	
