@@ -2,9 +2,6 @@ package com.jam.render;
 
 import org.lwjgl.opengl.GL;
 
-import com.jam.render.sprites.Sprite;
-import com.jam.render.sprites.SpriteList;
-
 import static org.lwjgl.opengl.GL32.*;
 
 import org.joml.Matrix4f;
@@ -20,7 +17,6 @@ public class Renderer {
 	private int height;
 	
 	private Camera camera = new Camera();
-	private Sprite testSprite;
 	
 	public void init() throws Exception {
 		GL.createCapabilities();
@@ -32,10 +28,6 @@ public class Renderer {
 		glDepthFunc(GL_LEQUAL);
 		// init other renderers
 		this.spriteRenderer.init();
-		// test code
-		testSprite = new Sprite(SpriteList.getSprite("test"));
-		testSprite.transform.scale.mul(0.5f);
-		this.spriteRenderer.notify(testSprite);
 	}
 	
 	public void render() {
@@ -43,8 +35,6 @@ public class Renderer {
 		float time = (float)GLFW.glfwGetTime();
 		delta = time - lastFrame;
 		lastFrame = time;
-		// spin sprite
-		testSprite.transform.rotation.rotateZ(delta);
 		// update camera
 		Matrix4f camMatrix = this.camera.calcCameraMatrix(this.width, this.height);
 		// draw frame
