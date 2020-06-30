@@ -1,5 +1,6 @@
 package com.jam.ui;
 
+import com.jam.main.Main;
 import com.jam.render.sprites.Sprite;
 import com.jam.render.sprites.SpriteList;
 import com.jam.room.Actor;
@@ -26,7 +27,7 @@ public class ButtonActor extends Actor {
 	@Override
 	public void update(float delta) {
 		this.transform.update();
-		this.enabledSprite.enabled = Math.random() > 0.5d;
+		this.enabledSprite.enabled = this.enabledSprite.isMouseOver();
 	}
 	
 	public interface ButtonListener {

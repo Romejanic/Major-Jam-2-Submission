@@ -19,7 +19,9 @@ public class TestRoom extends Room {
 	public void populate() {
 		this.testSprite = this.newActorWithSprite(SpriteList.getSprite("wood_floor"));
 		this.testSprite.getSpriteAt(0).transform.rotation.rotateZ(0.4f);
-		this.addActor(new PlayerActor());
+		
+		PlayerActor player = this.addActor(new PlayerActor());
+		player.transform.position.x += 3f;
 		
 		this.addActor(new ButtonActor("btn_play").setListener(() -> {
 			System.out.println("i've been pressed!");
