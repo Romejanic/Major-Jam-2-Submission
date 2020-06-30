@@ -1,6 +1,7 @@
 package com.jam.rooms;
 
 import com.jam.actors.PlayerActor;
+import com.jam.main.Main;
 import com.jam.math.Color;
 import com.jam.render.sprites.SpriteList;
 import com.jam.room.Actor;
@@ -20,7 +21,12 @@ public class TestRoom extends Room {
 		PlayerActor player = this.addActor(new PlayerActor());
 		player.transform.position.x += 3f;
 		
-		this.addUiElement(new UiButton("btn_play", 0, 0, this));
+		this.addUiElement(new UiButton("btn_play", -40, 0, this).addListener(() -> {
+			System.out.println("I've been pressed!");
+		}));
+		this.addUiElement(new UiButton("btn_quit", 40, 0, this).addListener(() -> {
+			Main.getInstance().requestClose();
+		}));
 	}
 	
 	@Override

@@ -1,6 +1,8 @@
 package com.jam.ui;
 
+import com.jam.input.MouseButton;
 import com.jam.main.Main;
+import com.jam.math.Color;
 import com.jam.room.Room;
 
 public class UiButton extends UiSprite {
@@ -27,7 +29,13 @@ public class UiButton extends UiSprite {
 		this.overlaySprite.copyTransform(this);
 		boolean hover = this.isMouseOver();
 		this.overlaySprite.enabled = hover;
-//		if(hover) // TODO: if(hover && mouse pressed) listener
+		// click listener
+		if(this.listener != null && hover && Main.getInput().isMouseButtonPressed(MouseButton.LEFT)) {
+			this.overlaySprite.tint = new Color(0.5f, 0.5f, 0.5f);
+			this.listener.pressed();
+		} else {
+			this.overlaySprite.tint = Color.WHITE;
+		}
 	}
 	
 	private boolean isMouseOver() {

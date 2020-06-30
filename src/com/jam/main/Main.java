@@ -15,7 +15,7 @@ import org.lwjgl.system.MemoryStack;
 import com.jam.input.InputManager;
 import com.jam.render.Renderer;
 import com.jam.room.Room;
-import com.jam.rooms.TestRoom;
+import com.jam.rooms.*;
 
 public class Main {
 
@@ -44,7 +44,7 @@ public class Main {
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, OPENGL_VERSION_MINOR);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
-		window = glfwCreateWindow(800, 600, "Major Jam 2", NULL, NULL);
+		window = glfwCreateWindow(800, 600, "LOVEMONGER", NULL, NULL);
 		if(window == NULL) {
 			glfwTerminate();
 			throw new RuntimeException("Failed to create game window!");
@@ -65,13 +65,14 @@ public class Main {
 			renderer.updateSize(wb.get(), hb.get());
 		}
 		glfwShowWindow(window);
-		this.currentRoom = this.renderer.createRoom(TestRoom.class);
+		this.currentRoom = this.renderer.createRoom(TitleRoom.class);
 		this.currentRoom.populate();
 		// loop
 		while(!glfwWindowShouldClose(window)) {
 			input.update();
-			this.currentRoom.update(renderer.getDeltaTime());
+			currentRoom.update(renderer.getDeltaTime());
 			renderer.render();
+			input.postUpdate();
 			glfwSwapBuffers(window);
 			glfwPollEvents();
 		}
@@ -89,6 +90,10 @@ public class Main {
 	
 	public int getFrameHeight() {
 		return this.renderer.getFrameHeight();
+	}
+	
+	public void requestClose() {
+		glfwSetWindowShouldClose(window, true);
 	}
 	
 	public static InputManager getInput() {
