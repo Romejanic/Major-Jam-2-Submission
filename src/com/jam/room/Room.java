@@ -18,8 +18,10 @@ public abstract class Room {
 	}
 	
 	public abstract void populate();
+	public abstract void updateRoom(float delta);
 	
 	public void update(float delta) {
+		this.updateRoom(delta);
 		for(Actor actor : this.actors) {
 			actor.update(delta);
 		}
@@ -32,12 +34,13 @@ public abstract class Room {
 		return actor;
 	}
 	
-	public void addActor(Actor actor) {
+	public <T extends Actor> T addActor(T actor) {
 		this.actors.add(actor);
 		Iterator<Sprite> iter = actor.getSpriteIterator();
 		while(iter.hasNext()) {
 			this.spriteRenderer.notify(iter.next());
 		}
+		return actor;
 	}
 	
 	public void removeActor(Actor actor) {

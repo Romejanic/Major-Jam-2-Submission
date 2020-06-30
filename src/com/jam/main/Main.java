@@ -12,6 +12,7 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryStack;
 
+import com.jam.input.InputManager;
 import com.jam.render.Renderer;
 import com.jam.room.Room;
 import com.jam.rooms.TestRoom;
@@ -26,6 +27,8 @@ public class Main {
 	private Renderer renderer = new Renderer();
 	
 	private Room currentRoom;
+	
+	private static InputManager input;
 	
 	public void run() throws Exception {
 		// init
@@ -52,6 +55,7 @@ public class Main {
 		});
 		glfwMakeContextCurrent(window);
 		renderer.init();
+		input = InputManager.newFromWindow(window);
 		try(MemoryStack stack = MemoryStack.stackPush()) {
 			// get current framebuffer size
 			IntBuffer wb = stack.callocInt(1);
@@ -75,6 +79,10 @@ public class Main {
 		glfwDestroyWindow(window);
 		glfwSetErrorCallback(null).free();
 		glfwTerminate();
+	}
+	
+	public static InputManager getInput() {
+		return input;
 	}
 	
 	public static void main(String[] args) {
