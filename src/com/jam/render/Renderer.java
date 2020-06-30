@@ -77,6 +77,14 @@ public class Renderer {
 		return delta;
 	}
 	
+	public int getFrameWidth() {
+		return this.width;
+	}
+	
+	public int getFrameHeight() {
+		return this.height;
+	}
+	
 	public <T extends Room> T createRoom(Class<T> clazz) {
 		try {
 			T room = clazz.newInstance();

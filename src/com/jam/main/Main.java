@@ -28,6 +28,7 @@ public class Main {
 	
 	private Room currentRoom;
 	
+	private static Main instance;
 	private static InputManager input;
 	
 	public void run() throws Exception {
@@ -82,13 +83,26 @@ public class Main {
 		glfwTerminate();
 	}
 	
+	public int getFrameWidth() {
+		return this.renderer.getFrameWidth();
+	}
+	
+	public int getFrameHeight() {
+		return this.renderer.getFrameHeight();
+	}
+	
 	public static InputManager getInput() {
 		return input;
 	}
 	
+	public static Main getInstance() {
+		return instance;
+	}
+	
 	public static void main(String[] args) {
 		try {
-			new Main().run();
+			instance = new Main();
+			instance.run();
 		} catch(Exception e) {
 			System.err.println("!! CRASHED !!");
 			System.err.print("Caused by ");

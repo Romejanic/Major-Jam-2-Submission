@@ -14,6 +14,7 @@ public class UiSprite {
 	public float scale = 1f;
 	public Color tint = new Color(Color.WHITE);
 	public boolean enabled = true;
+	public int sortingOrder = 0;
 	
 	private Matrix4f transform = new Matrix4f();
 	
