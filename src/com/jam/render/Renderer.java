@@ -25,9 +25,7 @@ public class Renderer {
 		// init gl
 		glClearColor(0.4f, 0.6f, 0.9f, 1f);
 		glEnable(GL_DEPTH_TEST);
-//		glEnable(GL_CULL_FACE);
 		glDepthFunc(GL_LEQUAL);
-		glCullFace(GL_BACK);
 		// init other renderers
 		this.spriteRenderer.init();
 		// test code
@@ -42,7 +40,7 @@ public class Renderer {
 		delta = time - lastFrame;
 		lastFrame = time;
 		// spin sprite
-		testSprite.transform.rotation.rotateY(delta);
+		testSprite.transform.rotation.rotateZ(delta);
 		// draw frame
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		this.spriteRenderer.render();
