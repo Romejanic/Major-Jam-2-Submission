@@ -12,6 +12,6 @@ const vec2 spritesheetSize = vec2(128.,128.);
 void main(void) {
 	gl_Position = cameraTransform * transform * vec4(vertex, 0., 1.);
 	// calculate texture coordinates
-	vec2 tc = vertex * .5 + .5;
+	vec2 tc = (vertex * vec2(1.,-1.)) * .5 + .5;
 	texCoords = (spriteInfo.xy + tc * spriteInfo.zw) / spritesheetSize;
 }

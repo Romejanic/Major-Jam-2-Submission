@@ -1,11 +1,12 @@
 package com.jam.render;
 
-import org.lwjgl.opengl.GL;
-
-import static org.lwjgl.opengl.GL32.*;
+import static org.lwjgl.opengl.GL11.*;
 
 import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.opengl.GL;
+
+import com.jam.room.Room;
 
 public class Renderer {
 	
@@ -58,6 +59,21 @@ public class Renderer {
 		this.width = width;
 		this.height = height;
 		glViewport(0, 0, width, height);
+	}
+	
+	public float getDeltaTime() {
+		return delta;
+	}
+	
+	public <T extends Room> T createRoom(Class<T> clazz) {
+		try {
+			T room = clazz.getConstructor(SpriteRenderer.class).newInstance(this.spriteRenderer);
+			return room;
+		} catch (Exception e) {
+			System.err.println("Failed to create room from " + clazz.toString());
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 }

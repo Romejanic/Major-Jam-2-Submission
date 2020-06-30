@@ -8,7 +8,7 @@ import com.jam.util.Util;
 public class Camera {
 
 	public final Transform2D transform = new Transform2D();
-	public float size = 1f;
+	public float size = 10f;
 	
 	private final Matrix4f projMatrix = new Matrix4f();
 	private final Matrix4f viewMatrix = new Matrix4f();

@@ -13,6 +13,8 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryStack;
 
 import com.jam.render.Renderer;
+import com.jam.room.Room;
+import com.jam.rooms.TestRoom;
 
 public class Main {
 
@@ -22,6 +24,8 @@ public class Main {
 	
 	private long window = NULL;
 	private Renderer renderer = new Renderer();
+	
+	private Room currentRoom;
 	
 	public void run() throws Exception {
 		// init
@@ -56,8 +60,11 @@ public class Main {
 			renderer.updateSize(wb.get(), hb.get());
 		}
 		glfwShowWindow(window);
+		this.currentRoom = this.renderer.createRoom(TestRoom.class);
+		this.currentRoom.populate();
 		// loop
 		while(!glfwWindowShouldClose(window)) {
+			this.currentRoom.update(renderer.getDeltaTime());
 			renderer.render();
 			glfwSwapBuffers(window);
 			glfwPollEvents();

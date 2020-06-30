@@ -14,8 +14,15 @@ public class Transform2D {
 	
 	private final Matrix4f matrix = new Matrix4f();
 	
+	private Transform2D parent;
+	
 	public void update() {
-		this.matrix.identity()
+		this.matrix.identity();
+		if(this.parent != null) {
+			this.parent.update();
+			this.matrix.set(this.parent.toMatrix());
+		}
+		this.matrix
 		.translate(this.position)
 		.rotate(this.rotation)
 		.scale(this.scale.x, this.scale.y, 1f);
@@ -26,6 +33,18 @@ public class Transform2D {
 		this.rotation.identity();
 		this.scale.set(1f);
 		this.matrix.identity();
+	}
+	
+	public void setParent(Transform2D parent) {
+		this.parent = parent;
+	}
+	
+	public void clearParent() {
+		this.setParent(null);
+	}
+	
+	public boolean isChildOf(Transform2D parent) {
+		return this.parent == parent;
 	}
 	
 	public Matrix4fc toMatrix() {
