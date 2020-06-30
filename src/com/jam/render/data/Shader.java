@@ -2,8 +2,13 @@ package com.jam.render.data;
 
 import static org.lwjgl.opengl.GL20.*;
 
+import java.nio.FloatBuffer;
 import java.util.HashMap;
 
+import org.joml.Matrix4fc;
+import org.lwjgl.system.MemoryStack;
+
+import com.jam.render.sprites.SpriteList.SpriteData;
 import com.jam.util.Util;
 
 public class Shader {
@@ -39,6 +44,17 @@ public class Shader {
 			return location;
 		}
 		return this.uniforms.get(name);
+	}
+	
+	public void uniformMat4(String name, Matrix4fc matrix) {
+		try(MemoryStack stack = MemoryStack.stackPush()) {
+			FloatBuffer buffer = stack.callocFloat(16);
+			glUniformMatrix4fv(getUniform(name), false, matrix.get(buffer));
+		}
+	}
+	
+	public void uniformSpriteData(String name, SpriteData data) {
+		glUniform4i(getUniform(name), data.x, data.y, data.w, data.h);
 	}
 	
 	public static Shader load(String name) throws Exception {

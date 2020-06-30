@@ -11,6 +11,7 @@ import com.jam.room.Room;
 public class Renderer {
 	
 	private SpriteRenderer spriteRenderer = new SpriteRenderer();
+	private UiRenderer uiRenderer = new UiRenderer();
 	
 	private float delta = 1f;
 	private float lastFrame = 0f;
@@ -29,6 +30,7 @@ public class Renderer {
 		glDepthFunc(GL_LEQUAL);
 		// init other renderers
 		this.spriteRenderer.init();
+		this.uiRenderer.init();
 	}
 	
 	public void render() {
@@ -41,6 +43,7 @@ public class Renderer {
 		// draw frame
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		this.spriteRenderer.render(camMatrix);
+		this.uiRenderer.render(this.width, this.height);
 		// check for OpenGL errors
 		int err;
 		do {
@@ -53,6 +56,7 @@ public class Renderer {
 	
 	public void destroy() {
 		this.spriteRenderer.destroy();
+		this.uiRenderer.destroy();
 	}
 	
 	public void updateSize(int width, int height) {

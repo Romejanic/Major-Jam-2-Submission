@@ -18,6 +18,10 @@ public class Color {
 		this.a = a;
 	}
 	
+	public Color(float r, float g, float b) {
+		this(r, g, b, 1f);
+	}
+	
 	public Color(float grey, float a) {
 		this(grey,grey,grey,a);
 	}

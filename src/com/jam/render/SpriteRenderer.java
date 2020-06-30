@@ -2,13 +2,11 @@ package com.jam.render;
 
 import static org.lwjgl.opengl.GL32.*;
 
-import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import org.joml.Matrix4fc;
-import org.lwjgl.system.MemoryStack;
 
 import com.jam.render.data.Shader;
 import com.jam.render.data.Texture;
@@ -43,15 +41,15 @@ public class SpriteRenderer {
 		this.spritesheet.bind(0);
 		this.spriteShader.bind();
 		glUniform1i(this.spriteShader.getUniform("spritesheet"), 0);
-		uniformMat4("cameraTransform", camMatrix);
+		this.spriteShader.uniformMat4("cameraTransform", camMatrix);
 		// draw each batch
 		for(SpriteData spriteData : batches.keySet()) {
-			glUniform4i(this.spriteShader.getUniform("spriteInfo"), spriteData.x, spriteData.y, spriteData.w, spriteData.h);
+			this.spriteShader.uniformSpriteData("spriteInfo", spriteData);
 			List<Sprite> batch = batches.get(spriteData);
 			for(Sprite sprite : batch) {
 				if(!sprite.enabled) continue;
 				sprite.transform.update();
-				this.uniformMat4("transform", sprite.transform.toMatrix());
+				spriteShader.uniformMat4("transform", sprite.transform.toMatrix());
 				sprite.tint.uniformColor(this.spriteShader, "tintColor");
 				mesh.draw();
 			}
@@ -84,13 +82,6 @@ public class SpriteRenderer {
 		batches.get(sprite.sprite).remove(sprite);
 		if(batches.get(sprite.sprite).isEmpty())
 			batches.remove(sprite.sprite);
-	}
-	
-	private void uniformMat4(String name, Matrix4fc matrix) {
-		try(MemoryStack stack = MemoryStack.stackPush()) {
-			FloatBuffer buffer = stack.callocFloat(16);
-			glUniformMatrix4fv(this.spriteShader.getUniform(name), false, matrix.get(buffer));
-		}
 	}
 	
 }
