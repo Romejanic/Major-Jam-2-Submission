@@ -2,12 +2,14 @@
 
 out vec4 fragColor;
 in vec2 texCoords;
-in vec2 debug;
 
 uniform sampler2D spritesheet;
+uniform ivec4 spriteInfo;
 uniform vec4 tintColor;
 
+const vec2 spritesheetSize = vec2(128.,128.);
+
 void main(void) {
-	fragColor = texture(spritesheet, texCoords) * tintColor;
-	fragColor = vec4(debug,0.,1.);
+	vec2 tc = (spriteInfo.xy + mod(texCoords,1.) * spriteInfo.zw) / spritesheetSize;
+	fragColor = texture(spritesheet, tc) * tintColor;
 }

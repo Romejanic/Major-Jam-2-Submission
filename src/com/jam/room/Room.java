@@ -84,7 +84,7 @@ public abstract class Room {
 	
 	public void setTilemap(Tilemap tilemap) {
 		if(this.tilemap != null) {
-			this.tilemapRenderer.denotify(tilemap);
+			this.tilemapRenderer.denotify(this.tilemap);
 		}
 		this.tilemap = tilemap;
 		if(tilemap != null) {

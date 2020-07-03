@@ -8,13 +8,12 @@ import com.jam.render.sprites.SpriteList.SpriteData;
 public class Tilemap {
 
 	public SpriteData sprite;
-	public float scale;
+	public float scale = 10f;
 	public Color tint = new Color(Color.WHITE);
 	public Transform2D transform = new Transform2D();
 	
 	public Tilemap(String spriteName) {
 		this.sprite = SpriteList.getSprite(spriteName);
-		this.scale = 1f;
 		this.transform.scale.set(10f, 10f);
 	}
 	
