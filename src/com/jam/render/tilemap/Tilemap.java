@@ -34,4 +34,10 @@ public class Tilemap {
 		return this;
 	}
 	
+	public Tilemap setSize(float w, float h) {
+		this.transform.scale.set(w, h);
+		this.texScaling.set(w, -h);
+		return this;
+	}
+	
 }
