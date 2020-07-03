@@ -6,6 +6,7 @@ import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
 
+import com.jam.math.Color;
 import com.jam.render.data.Texture;
 import com.jam.room.Room;
 
@@ -13,6 +14,7 @@ public class Renderer {
 	
 	private SpriteRenderer spriteRenderer = new SpriteRenderer();
 	private UiRenderer uiRenderer = new UiRenderer();
+	private TilemapRenderer tilemapRenderer = new TilemapRenderer();
 	
 	private Texture spritesheet;
 	
@@ -36,6 +38,7 @@ public class Renderer {
 		// init other renderers
 		this.spriteRenderer.init();
 		this.uiRenderer.init();
+		this.tilemapRenderer.init();
 	}
 	
 	public void render() {
@@ -49,6 +52,7 @@ public class Renderer {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		this.spritesheet.bind(0);
 		this.spriteRenderer.render(camMatrix);
+		this.tilemapRenderer.render(camMatrix);
 		this.uiRenderer.render(this.width, this.height);
 		this.spritesheet.unbind();
 		// check for OpenGL errors
@@ -64,6 +68,7 @@ public class Renderer {
 	public void destroy() {
 		this.spriteRenderer.destroy();
 		this.uiRenderer.destroy();
+		this.tilemapRenderer.destroy();
 		this.spritesheet.delete();
 	}
 	
@@ -85,10 +90,14 @@ public class Renderer {
 		return this.height;
 	}
 	
+	public void clearBg(Color color) {
+		glClearColor(color.r, color.g, color.b, color.a);
+	}
+	
 	public <T extends Room> T createRoom(Class<T> clazz) {
 		try {
 			T room = clazz.newInstance();
-			room.updateRenderers(this.spriteRenderer, this.uiRenderer);
+			room.updateRenderers(this.spriteRenderer, this.uiRenderer, this.tilemapRenderer);
 			return room;
 		} catch (Exception e) {
 			System.err.println("Failed to create room from " + clazz.toString());

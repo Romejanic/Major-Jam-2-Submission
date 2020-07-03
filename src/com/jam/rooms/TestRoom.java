@@ -3,7 +3,6 @@ package com.jam.rooms;
 import com.jam.actors.PlayerActor;
 import com.jam.main.Main;
 import com.jam.math.Color;
-import com.jam.render.sprites.SpriteList;
 import com.jam.room.Actor;
 import com.jam.room.Room;
 import com.jam.ui.UiButton;
@@ -14,7 +13,7 @@ public class TestRoom extends Room {
 
 	@Override
 	public void populate() {
-		this.testSprite = this.newActorWithSprite(SpriteList.getSprite("wood_floor"));
+		this.testSprite = this.newActorWithSprite("wood_floor");
 		this.testSprite.getSpriteAt(0).transform.rotation.rotateZ(0.4f);
 		this.testSprite.getSpriteAt(0).tint = new Color(1f,0.2f,0.2f);
 		

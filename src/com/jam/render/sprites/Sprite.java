@@ -15,4 +15,8 @@ public class Sprite {
 		this.sprite = sprite;
 	}
 	
+	public Sprite(String spriteName) {
+		this(SpriteList.getSprite(spriteName));
+	}
+	
 }

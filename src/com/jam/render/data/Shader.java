@@ -46,6 +46,10 @@ public class Shader {
 		return this.uniforms.get(name);
 	}
 	
+	public void uniformFloat(String name, float value) {
+		glUniform1f(getUniform(name), value);
+	}
+	
 	public void uniformMat4(String name, Matrix4fc matrix) {
 		try(MemoryStack stack = MemoryStack.stackPush()) {
 			FloatBuffer buffer = stack.callocFloat(16);

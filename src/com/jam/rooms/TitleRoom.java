@@ -1,6 +1,8 @@
 package com.jam.rooms;
 
 import com.jam.main.Main;
+import com.jam.math.Color;
+import com.jam.render.tilemap.Tilemap;
 import com.jam.room.Room;
 import com.jam.ui.UiButton;
 import com.jam.ui.UiSprite;
@@ -13,6 +15,9 @@ public class TitleRoom extends Room {
 	
 	@Override
 	public void populate() {
+		this.setBgColor(new Color(0.6f, 0.6f, 0.2f));
+		// tilemap
+		this.setTilemap(new Tilemap("wood_floor"));
 		// title logo
 		this.logo = this.addUiElement(new UiSprite("title_logo", -150, 150));
 		this.logo.scale = 6f;

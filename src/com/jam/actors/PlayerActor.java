@@ -4,7 +4,6 @@ import com.jam.input.InputManager;
 import com.jam.input.Key;
 import com.jam.main.Main;
 import com.jam.render.sprites.Sprite;
-import com.jam.render.sprites.SpriteList;
 import com.jam.room.Actor;
 
 public class PlayerActor extends Actor {
@@ -12,7 +11,7 @@ public class PlayerActor extends Actor {
 	public float walkSpeed = 4f;
 	
 	public PlayerActor() {
-		this.addSprite(new Sprite(SpriteList.getSprite("player_temp")));
+		this.addSprite(new Sprite("player_temp"));
 	}
 	
 	@Override
