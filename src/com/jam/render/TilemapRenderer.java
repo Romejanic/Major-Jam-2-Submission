@@ -48,6 +48,10 @@ public class TilemapRenderer {
 		this.shader.delete();
 	}
 	
+	protected void clearBatches() {
+		this.batches.clear();
+	}
+	
 	public void notify(Tilemap tilemap) {
 		List<Tilemap> batch = this.batches.get(tilemap.sprite);
 		if(batch == null) {

@@ -18,6 +18,7 @@ public class RoomTransition extends UiSprite {
 		this.width = 500;
 		this.height = 500;
 		this.tint = new Color(0f,0f,0f,0f);
+		this.sortingOrder = 1000;
 	}
 	
 	public RoomTransition(Class<? extends Room> room) {

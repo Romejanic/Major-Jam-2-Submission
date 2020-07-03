@@ -28,6 +28,7 @@ public class Main {
 	private Renderer renderer = new Renderer();
 	
 	private Room currentRoom;
+	private Room nextRoom;
 	
 	private static Main instance;
 	private static InputManager input;
@@ -79,6 +80,12 @@ public class Main {
 			input.postUpdate();
 			glfwSwapBuffers(window);
 			glfwPollEvents();
+			if(this.nextRoom != null) {
+				this.currentRoom = this.nextRoom;
+				this.nextRoom = null;
+				this.renderer.clearBatches();
+				this.currentRoom.populate();
+			}
 		}
 		// destroy
 		renderer.destroy();
@@ -101,8 +108,7 @@ public class Main {
 	}
 	
 	public void gotoRoom(Class<? extends Room> roomClass) {
-		this.currentRoom = this.renderer.createRoom(roomClass);
-		this.currentRoom.populate();
+		this.nextRoom = this.renderer.createRoom(roomClass);
 	}
 	
 	public static InputManager getInput() {

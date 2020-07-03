@@ -3,6 +3,7 @@ package com.jam.render;
 import static org.lwjgl.opengl.GL32.*;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.joml.Matrix4f;
@@ -14,6 +15,7 @@ import com.jam.ui.UiSprite;
 public class UiRenderer {
 
 	private final List<UiSprite> sprites = new ArrayList<UiSprite>();
+	private final LinkedList<UiSprite> queuedSprites = new LinkedList<UiSprite>();
 	
 	private SpriteMesh mesh;
 	private Shader shader;
@@ -47,10 +49,20 @@ public class UiRenderer {
 		this.mesh.unbind();
 		glDisable(GL_BLEND);
 		glEnable(GL_DEPTH_TEST);
+		// add queued sprites
+		if(!this.queuedSprites.isEmpty()) {
+			this.sprites.addAll(this.queuedSprites);
+			this.queuedSprites.clear();
+		}
 	}
 	
 	protected void destroy() {
 		this.shader.delete();
+	}
+	
+	protected void clearBatches() {
+		this.sprites.clear();
+		this.queuedSprites.clear();
 	}
 	
 	private void updateProjMat(int w, int h) {
@@ -58,7 +70,7 @@ public class UiRenderer {
 	}
 	
 	public void notify(UiSprite sprite) {
-		this.sprites.add(sprite);
+		this.queuedSprites.add(sprite);
 	}
 	
 	public void denotify(UiSprite sprite) {

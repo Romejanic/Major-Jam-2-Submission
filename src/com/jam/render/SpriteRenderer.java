@@ -60,6 +60,10 @@ public class SpriteRenderer {
 		this.spriteShader.delete();
 	}
 	
+	protected void clearBatches() {
+		this.batches.clear();
+	}
+	
 	public void notify(Sprite sprite) {
 		List<Sprite> batch = batches.get(sprite.sprite);
 		if(batch == null) {
