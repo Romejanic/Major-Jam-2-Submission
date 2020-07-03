@@ -100,6 +100,11 @@ public class Main {
 		glfwSetWindowShouldClose(window, true);
 	}
 	
+	public void gotoRoom(Class<? extends Room> roomClass) {
+		this.currentRoom = this.renderer.createRoom(roomClass);
+		this.currentRoom.populate();
+	}
+	
 	public static InputManager getInput() {
 		return input;
 	}
