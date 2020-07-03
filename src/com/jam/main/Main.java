@@ -14,8 +14,10 @@ import org.lwjgl.system.MemoryStack;
 
 import com.jam.input.InputManager;
 import com.jam.render.Renderer;
+import com.jam.render.sprites.SpriteList;
 import com.jam.room.Room;
 import com.jam.rooms.*;
+import com.jam.util.WindowIcon;
 
 public class Main {
 
@@ -56,6 +58,7 @@ public class Main {
 		});
 		glfwMakeContextCurrent(window);
 		renderer.init();
+		WindowIcon.load(window);
 		input = InputManager.newFromWindow(window);
 		try(MemoryStack stack = MemoryStack.stackPush()) {
 			// get current framebuffer size
