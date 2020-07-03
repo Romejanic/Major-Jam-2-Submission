@@ -17,7 +17,7 @@ public class TitleRoom extends Room {
 	public void populate() {
 		this.setBgColor(new Color(0.6f, 0.6f, 0.2f));
 		// tilemap
-		this.setTilemap(new Tilemap("wood_floor"));
+		this.setTilemap(new Tilemap("wood_floor").setWidth(30f));
 		// title logo
 		this.logo = this.addUiElement(new UiSprite("title_logo", -150, 150));
 		this.logo.scale = 6f;

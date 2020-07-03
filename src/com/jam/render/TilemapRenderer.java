@@ -34,7 +34,7 @@ public class TilemapRenderer {
 				for(Tilemap tile : batch) {
 					tile.transform.update();
 					this.shader.uniformMat4("transform", tile.transform.toMatrix());
-					this.shader.uniformFloat("spriteScale", tile.scale);
+					this.shader.uniformVec2("texScale", tile.texScaling);
 					tile.tint.uniformColor(this.shader, "tintColor");
 					this.mesh.draw();
 				}

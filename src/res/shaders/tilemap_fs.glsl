@@ -10,6 +10,6 @@ uniform vec4 tintColor;
 const vec2 spritesheetSize = vec2(128.,128.);
 
 void main(void) {
-	vec2 tc = (spriteInfo.xy + mod(texCoords,1.) * spriteInfo.zw) / spritesheetSize;
+	vec2 tc = (spriteInfo.xy + fract(texCoords) * spriteInfo.zw) / spritesheetSize;
 	fragColor = texture(spritesheet, tc) * tintColor;
 }

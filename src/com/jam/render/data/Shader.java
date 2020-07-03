@@ -6,6 +6,7 @@ import java.nio.FloatBuffer;
 import java.util.HashMap;
 
 import org.joml.Matrix4fc;
+import org.joml.Vector2fc;
 import org.lwjgl.system.MemoryStack;
 
 import com.jam.render.sprites.SpriteList.SpriteData;
@@ -48,6 +49,10 @@ public class Shader {
 	
 	public void uniformFloat(String name, float value) {
 		glUniform1f(getUniform(name), value);
+	}
+	
+	public void uniformVec2(String name, Vector2fc value) {
+		glUniform2f(getUniform(name), value.x(), value.y());
 	}
 	
 	public void uniformMat4(String name, Matrix4fc matrix) {
