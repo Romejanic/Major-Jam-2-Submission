@@ -14,12 +14,13 @@ public class Actor {
 	
 	public void update(float delta) {}
 	
-	public void addSprite(Sprite sprite) {
+	public <T extends Sprite> T addSprite(T sprite) {
 		this.sprites.add(sprite);
 		sprite.transform.setParent(this.transform);
 		if(this.currentRoom != null) {
 			this.currentRoom.notifyActorSprite(sprite);
 		}
+		return sprite;
 	}
 	
 	public void removeSprite(Sprite sprite) {

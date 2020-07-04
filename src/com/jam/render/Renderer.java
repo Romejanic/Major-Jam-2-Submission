@@ -51,8 +51,8 @@ public class Renderer {
 		// draw frame
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		this.spritesheet.bind(0);
-		this.spriteRenderer.render(camMatrix);
 		this.tilemapRenderer.render(camMatrix);
+		this.spriteRenderer.render(camMatrix);
 		this.uiRenderer.render(this.width, this.height);
 		this.spritesheet.unbind();
 		// check for OpenGL errors

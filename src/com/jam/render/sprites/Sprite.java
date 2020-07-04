@@ -19,4 +19,9 @@ public class Sprite {
 		this(SpriteList.getSprite(spriteName));
 	}
 	
+	public Sprite matchAspect() {
+		this.transform.scale.x = (float)sprite.w / (float)sprite.h;
+		return this;
+	}
+	
 }

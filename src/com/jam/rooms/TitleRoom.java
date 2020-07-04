@@ -1,5 +1,6 @@
 package com.jam.rooms;
 
+import com.jam.actors.CharacterActor;
 import com.jam.main.Main;
 import com.jam.math.Color;
 import com.jam.render.tilemap.Tilemap;
@@ -17,6 +18,14 @@ public class TitleRoom extends Room {
 	
 	@Override
 	public void populate() {
+		// characters
+		for(int i = 0; i < 30; i++) {
+			CharacterActor character = new CharacterActor();
+			character.transform.position.x = -30f + (float)Math.random() * 60f;
+			character.transform.position.y = -10f + (float)Math.random() * 20f;
+			this.addActor(character);
+		}
+		// background
 		this.setBgColor(new Color(0.6f, 0.6f, 0.2f));
 		// tilemap
 		this.setTilemap(new Tilemap("love_tile").setWidth(30f));
