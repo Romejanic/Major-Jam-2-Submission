@@ -20,7 +20,7 @@ import com.jam.util.WindowIcon;
 
 public class Main {
 
-	public static final String GAME_NAME = "Major Jam 2";
+	public static final String GAME_NAME = "LOVEMONGER";
 	public static final int OPENGL_VERSION_MAJOR = 3;
 	public static final int OPENGL_VERSION_MINOR = 2;
 	
@@ -46,7 +46,7 @@ public class Main {
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, OPENGL_VERSION_MINOR);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
-		window = glfwCreateWindow(800, 600, "LOVEMONGER", NULL, NULL);
+		window = glfwCreateWindow(800, 600, GAME_NAME, NULL, NULL);
 		if(window == NULL) {
 			glfwTerminate();
 			throw new RuntimeException("Failed to create game window!");
