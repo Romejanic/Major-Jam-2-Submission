@@ -48,7 +48,7 @@ public class TitleRoom extends Room {
 			Main.getInstance().requestClose();
 		}));
 		// credit button
-		this.addUiElement(new UiButton("credit", -310, -270, this).addListener(() -> {
+		this.addUiElement(new UiButton("credit", -310, -270, this, true).addListener(() -> {
 			try {
 				Desktop.getDesktop().browse(URI.create(ITCH_IO_LINK));
 			} catch(Exception e) {
