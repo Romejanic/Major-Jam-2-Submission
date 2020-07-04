@@ -10,6 +10,7 @@ public class Sprite {
 	public SpriteData sprite;
 	public Color tint = new Color(Color.WHITE);
 	public boolean enabled = true;
+	public int sortingOrder = 0;
 	
 	public Sprite(SpriteData sprite) {
 		this.sprite = sprite;

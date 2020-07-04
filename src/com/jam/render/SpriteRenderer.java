@@ -41,6 +41,7 @@ public class SpriteRenderer {
 		for(SpriteData spriteData : batches.keySet()) {
 			this.spriteShader.uniformSpriteData("spriteInfo", spriteData);
 			List<Sprite> batch = batches.get(spriteData);
+			batch.sort((a,b) -> { return a.sortingOrder-b.sortingOrder; });
 			for(Sprite sprite : batch) {
 				if(!sprite.enabled) continue;
 				sprite.transform.update();

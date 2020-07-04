@@ -16,16 +16,11 @@ public class CharacterActor extends Actor {
 	private boolean isMale = false;
 
 	private WanderAI wander;
-	
+
 	public CharacterActor() {
 		this.isMale = Math.random() > 0.5d;
 		this.animTime += (float)Math.random();
 		String spriteSuffix = this.isMale ? "male" : "female";
-		// torso sprite
-		this.addSprite(new Sprite("torso").matchAspect());
-		// head sprite
-		this.head = this.addSprite(new Sprite("head_" + spriteSuffix).matchAspect());
-		this.head.transform.position.y = 1.85f;
 		// left leg
 		this.leftLeg = this.addSprite(new Sprite("leg_l")).matchAspect();
 		this.leftLeg.transform.position.x = 0.2f;
@@ -34,16 +29,22 @@ public class CharacterActor extends Actor {
 		this.rightLeg = this.addSprite(new Sprite("leg_r")).matchAspect();
 		this.rightLeg.transform.position.x = 0.5f;
 		this.rightLeg.transform.position.y = -2f;
+		// torso sprite
+		this.addSprite(new Sprite("torso").matchAspect());
+		// head sprite
+		this.head = this.addSprite(new Sprite("head_" + spriteSuffix).matchAspect());
+		this.head.transform.position.y = 1.85f;
 	}
 
 	public void setWander(float minX, float minY, float maxX, float maxY) {
 		this.wander = new WanderAI(this, minX, minY, maxX, maxY);
 	}
-	
+
 	@Override
 	public void update(float delta) {
 		this.animTime += delta;
 		this.legMoveTime += delta;
+		this.setActorSortingOrder((int)(100f*this.transform.position.y));
 		if(this.wander != null) {
 			this.wander.update(delta);
 		}

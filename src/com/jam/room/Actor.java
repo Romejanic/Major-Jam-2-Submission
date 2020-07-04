@@ -37,6 +37,12 @@ public class Actor {
 		this.currentRoom = room;
 	}
 	
+	public void setActorSortingOrder(int order) {
+		for(Sprite sprite : this.sprites) {
+			sprite.sortingOrder = order;
+		}
+	}
+	
 	public Iterator<Sprite> getSpriteIterator() {
 		return this.sprites.iterator();
 	}
