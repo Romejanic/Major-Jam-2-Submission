@@ -21,6 +21,7 @@ public class TitleRoom extends Room {
 		// characters
 		for(int i = 0; i < 30; i++) {
 			CharacterActor character = new CharacterActor();
+			character.setWander(-30f, -10f, 30f, 10f);
 			character.transform.position.x = -30f + (float)Math.random() * 60f;
 			character.transform.position.y = -10f + (float)Math.random() * 20f;
 			this.addActor(character);

@@ -1,5 +1,6 @@
 package com.jam.actors;
 
+import com.jam.actors.ai.WanderAI;
 import com.jam.render.sprites.Sprite;
 import com.jam.room.Actor;
 
@@ -14,6 +15,8 @@ public class CharacterActor extends Actor {
 	private int legState = 0;
 	private boolean isMale = false;
 
+	private WanderAI wander;
+	
 	public CharacterActor() {
 		this.isMale = Math.random() > 0.5d;
 		this.animTime += (float)Math.random();
@@ -33,10 +36,17 @@ public class CharacterActor extends Actor {
 		this.rightLeg.transform.position.y = -2f;
 	}
 
+	public void setWander(float minX, float minY, float maxX, float maxY) {
+		this.wander = new WanderAI(this, minX, minY, maxX, maxY);
+	}
+	
 	@Override
 	public void update(float delta) {
 		this.animTime += delta;
 		this.legMoveTime += delta;
+		if(this.wander != null) {
+			this.wander.update(delta);
+		}
 		// animations
 		if(this.isMale) {
 			this.head.transform.position.y = 1.85f + 0.05f * (float)Math.sin(this.animTime*4d*Math.PI);
