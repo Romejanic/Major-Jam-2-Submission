@@ -1,6 +1,7 @@
 package com.jam.rooms;
 
 import com.jam.actors.CharacterActor;
+import com.jam.main.Main;
 import com.jam.render.tilemap.Tilemap;
 import com.jam.room.Room;
 import com.jam.ui.UiNumberLabel;
@@ -65,6 +66,8 @@ public class IngameRoom extends Room {
 				this.timeUpSprite.tint.a = Math.min(1f, this.timeUpSprite.tint.a);
 			}
 		}
+		// test
+		System.out.println(this.getCamera().screenPointToWorld(Main.getInput().getMouseX(), Main.getInput().getMouseY()));
 	}
 
 	private CharacterActor getRandomSingleChar() {

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.jam.math.Color;
+import com.jam.render.Camera;
 import com.jam.render.SpriteRenderer;
 import com.jam.render.TilemapRenderer;
 import com.jam.render.UiRenderer;
@@ -18,6 +19,7 @@ public abstract class Room {
 	private SpriteRenderer spriteRenderer;
 	private UiRenderer uiRenderer;
 	private TilemapRenderer tilemapRenderer;
+	private Camera camera;
 	
 	private final ArrayList<Actor> actors = new ArrayList<Actor>();
 	private Tilemap tilemap = null;
@@ -105,7 +107,12 @@ public abstract class Room {
 		return this.bgColor;
 	}
 	
-	public void updateRenderers(SpriteRenderer sprite, UiRenderer ui, TilemapRenderer tilemap) {
+	public Camera getCamera() {
+		return this.camera;
+	}
+	
+	public void updateRenderers(Camera camera, SpriteRenderer sprite, UiRenderer ui, TilemapRenderer tilemap) {
+		this.camera = camera;
 		this.spriteRenderer = sprite;
 		this.uiRenderer = ui;
 		this.tilemapRenderer = tilemap;

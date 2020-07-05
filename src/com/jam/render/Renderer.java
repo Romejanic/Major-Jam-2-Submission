@@ -103,7 +103,12 @@ public class Renderer {
 	public <T extends Room> T createRoom(Class<T> clazz) {
 		try {
 			T room = clazz.newInstance();
-			room.updateRenderers(this.spriteRenderer, this.uiRenderer, this.tilemapRenderer);
+			room.updateRenderers(
+				this.camera,
+				this.spriteRenderer,
+				this.uiRenderer,
+				this.tilemapRenderer
+			);
 			return room;
 		} catch (Exception e) {
 			System.err.println("Failed to create room from " + clazz.toString());

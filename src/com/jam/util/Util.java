@@ -4,8 +4,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -13,6 +15,8 @@ import com.google.gson.GsonBuilder;
 public class Util {
 
 	public static final Vector3f TEMP_VEC3 = new Vector3f();
+	public static final Vector4f TEMP_VEC4 = new Vector4f();
+	public static final Matrix4f TEMP_MAT4 = new Matrix4f();
 	
 	public static final Gson GSON = new GsonBuilder().create();
 
