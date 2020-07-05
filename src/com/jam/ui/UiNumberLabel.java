@@ -17,6 +17,7 @@ public class UiNumberLabel {
 	private UiSprite prefix;
 	
 	private boolean enabled = true;
+	private int sortingLayer = 0;
 	
 	public UiNumberLabel(int number, int posX, int posY, float scale, boolean percent, Room room) {
 		this.number = number;
@@ -77,7 +78,16 @@ public class UiNumberLabel {
 		for(UiSprite sprite : this.sprites) {
 			sprite.enabled = enabled;
 		}
-		this.prefix.enabled = enabled;
+		if(this.prefix != null) this.prefix.enabled = enabled;
+	}
+	
+	public void setSortingLayer(int layer) {
+		if(this.sortingLayer == layer) return;
+		this.sortingLayer = layer;
+		for(UiSprite sprite : this.sprites) {
+			sprite.sortingOrder = layer;
+		}
+		if(this.prefix != null) this.prefix.sortingOrder = layer;
 	}
 	
 	private void refresh() {
@@ -92,6 +102,7 @@ public class UiNumberLabel {
 			UiSprite percent = new UiSprite("percent", this.posX, this.posY);
 			percent.enabled = this.enabled;
 			percent.scale = this.scale;
+			percent.sortingOrder = this.sortingLayer;
 			this.sprites.add(percent);
 			this.room.addUiElement(percent);
 			xOff += 8 * percent.scale;
@@ -100,6 +111,7 @@ public class UiNumberLabel {
 			UiSprite zero = new UiSprite("0", this.posX - xOff, this.posY);
 			zero.enabled = this.enabled;
 			zero.scale = this.scale;
+			zero.sortingOrder = this.sortingLayer;
 			this.sprites.add(zero);
 			this.room.addUiElement(zero);
 			return;
@@ -109,6 +121,7 @@ public class UiNumberLabel {
 			UiSprite sprite = new UiSprite(String.valueOf(digit), this.posX - xOff, this.posY);
 			sprite.scale = this.scale;
 			sprite.enabled = this.enabled;
+			sprite.sortingOrder = this.sortingLayer;
 			this.sprites.add(sprite);
 			this.room.addUiElement(sprite);
 			temp = temp / 10;

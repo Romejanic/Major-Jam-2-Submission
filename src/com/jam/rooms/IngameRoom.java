@@ -24,7 +24,9 @@ public class IngameRoom extends Room {
 	private UiNumberLabel timeLabel;
 	private UiSprite timeUpSprite;
 	private UiSprite scrim;
+	private UiNumberLabel startTimeLabel;
 	
+	private float startTimer = 3f;
 	private float gameTimer = 60f;
 	private boolean gameOver = false;
 	
@@ -49,6 +51,8 @@ public class IngameRoom extends Room {
 		// labels
 		this.timeLabel = new UiNumberLabel(60, 360, 280, this);
 		this.addUiElement(new UiSprite("timer", 385, 280, 2f));
+		this.startTimeLabel = new UiNumberLabel(3, 0, 0, 5f, this);
+		this.startTimeLabel.setSortingLayer(20000);
 		// characters
 		this.chars = new CharacterActor[20];
 		for(int i = 0; i < this.chars.length; i++) {
@@ -62,7 +66,7 @@ public class IngameRoom extends Room {
 		this.scrim = this.addUiElement(new UiSprite("white", 0, 0));
 		this.scrim.width = Main.getInstance().getFrameWidth();
 		this.scrim.height = Main.getInstance().getFrameHeight();
-		this.scrim.tint = new Color(0f, 0f, 0f, 0f);
+		this.scrim.tint = new Color(0f, 0f, 0f, 1f);
 		this.scrim.sortingOrder = 10000;
 		// make some couples
 		int nCouples = 2 + (int)Math.random() * 2;
@@ -76,6 +80,19 @@ public class IngameRoom extends Room {
 
 	@Override
 	public void updateRoom(float delta) {
+		// start timer
+		if(this.startTimer > 0f) {
+			this.startTimer -= delta;
+			int time = (int)Math.max(0, Math.ceil((double)this.startTimer));
+			if(this.startTimeLabel.get() != time) {
+				this.startTimeLabel.set(time);
+			}
+			return;
+		}
+		if(this.startTimeLabel != null) {
+			this.startTimeLabel.remove();
+			this.startTimeLabel = null;
+		}
 		// update timer
 		this.gameTimer -= delta;
 		int intTimer = (int) Math.max(0, Math.ceil((double)this.gameTimer));
@@ -143,6 +160,11 @@ public class IngameRoom extends Room {
 	
 	public void makeCoupleWithSelected(CharacterActor other) {
 		CharacterActor selected = this.chars[this.selectedChar];
+		if(other == selected) {
+			this.selectedChar = -1;
+			this.hoveredChar = -1;
+			return;
+		}
 		CoupleData aCouple = this.getCoupleFor(selected);
 		CoupleData bCouple = this.getCoupleFor(other);
 		if(aCouple != null) {
