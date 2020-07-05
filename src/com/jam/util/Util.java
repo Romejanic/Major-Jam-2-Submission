@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import com.google.gson.Gson;
@@ -34,6 +35,11 @@ public class Util {
 		}
 		in.close();
 		return sb.toString();
+	}
+	
+	public static Vector2f getRandomPointOnUnitCircle() {
+		double a = Math.random() * 2 * Math.PI;
+		return new Vector2f((float)Math.cos(a), (float)Math.sin(a)).normalize();
 	}
 	
 }

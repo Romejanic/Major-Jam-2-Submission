@@ -1,7 +1,9 @@
 package com.jam.actors.ai;
 
 import org.joml.Vector2f;
+import org.joml.Vector2fc;
 import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 import com.jam.math.Transform2D;
 import com.jam.room.Actor;
@@ -35,11 +37,19 @@ public class WanderAI {
 			float dx = this.movePoint.x - actorPos.x;
 			this.actorTransform.scale.x = Math.signum(dx);
 		}
-		this.movePoint.sub(actorPos.x, actorPos.y, this.deltaPos);
-		this.deltaPos.normalize();
+		this.moveTowards(this.movePoint, delta);
+	}
+	
+	protected void moveTowards(Vector2fc point, float delta) {
+		Vector3f actorPos = this.actorTransform.position;
 		float speed = this.moveSpeed * delta;
-		this.deltaPos.mul(speed);
+		point.sub(actorPos.x(), actorPos.y(), this.deltaPos);
+		this.deltaPos.normalize().mul(speed);
 		actorPos.add(this.deltaPos.x, this.deltaPos.y, 0f);
+	}
+	
+	protected void moveTowards(Vector3fc point, float delta) {
+		this.moveTowards(this.deltaPos.set(point.x(), point.y()), delta);
 	}
 	
 	private float lerp(float a, float b, float x) {

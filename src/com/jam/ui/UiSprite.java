@@ -26,6 +26,11 @@ public class UiSprite {
 		this.height = this.sprite.h;
 	}
 	
+	public UiSprite(String spriteName, int posX, int posY, float scale) {
+		this(spriteName, posX, posY);
+		this.scale = scale;
+	}
+	
 	public Matrix4f getTransform() {
 		return this.transform
 				.identity()

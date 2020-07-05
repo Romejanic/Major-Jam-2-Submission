@@ -1,8 +1,12 @@
 package com.jam.actors;
 
+import org.joml.Vector2f;
+
+import com.jam.actors.ai.CoupleAI;
 import com.jam.actors.ai.WanderAI;
 import com.jam.render.sprites.Sprite;
 import com.jam.room.Actor;
+import com.jam.util.Util;
 
 public class CharacterActor extends Actor {
 
@@ -16,9 +20,10 @@ public class CharacterActor extends Actor {
 	private boolean isMale = false;
 
 	private WanderAI wander;
+	private CoupleAI couple;
 
-	public CharacterActor() {
-		this.isMale = Math.random() > 0.5d;
+	public CharacterActor(boolean isMale) {
+		this.isMale = isMale;
 		this.animTime += (float)Math.random();
 		String spriteSuffix = this.isMale ? "male" : "female";
 		// left leg
@@ -35,11 +40,38 @@ public class CharacterActor extends Actor {
 		this.head = this.addSprite(new Sprite("head_" + spriteSuffix).matchAspect());
 		this.head.transform.position.y = 1.85f;
 	}
+	
+	public CharacterActor() {
+		this(Math.random() > 0.5d);
+	}
 
 	public void setWander(float minX, float minY, float maxX, float maxY) {
 		this.wander = new WanderAI(this, minX, minY, maxX, maxY);
 	}
+	
+	public void setLeaderFor(CoupleAI ai) {
+		this.couple = new CoupleAI(this, this.wander.minBound, this.wander.maxBound);
+		this.couple.setLeader();
+		this.wander = null;
+	}
+	
+	public void setFollowing(CharacterActor other) {
+		this.couple = new CoupleAI(this, this.wander.minBound, this.wander.maxBound);
+		this.couple.setFollowing(other);
+		this.wander = null;
+		Vector2f rnd = Util.getRandomPointOnUnitCircle();
+		this.transform.position.set(other.transform.position).sub(rnd.x, rnd.y, 0f);
+	}
 
+	public void breakup() {
+		this.couple.breakup();
+		this.couple = null;
+	}
+	
+	public boolean isInCouple() {
+		return this.couple != null;
+	}
+	
 	@Override
 	public void update(float delta) {
 		this.animTime += delta;
@@ -47,6 +79,8 @@ public class CharacterActor extends Actor {
 		this.setActorSortingOrder((int)(100f*this.transform.position.y));
 		if(this.wander != null) {
 			this.wander.update(delta);
+		} else if(this.couple != null) {
+			this.couple.update(delta);
 		}
 		// animations
 		if(this.isMale) {
@@ -86,6 +120,10 @@ public class CharacterActor extends Actor {
 				break;
 			}
 		}
+	}
+	
+	public boolean isMale() {
+		return this.isMale;
 	}
 
 }
