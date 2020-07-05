@@ -3,13 +3,12 @@ package com.jam.actors.ai;
 import org.joml.Vector2fc;
 
 import com.jam.actors.CharacterActor;
-import com.jam.math.Transform2D;
 import com.jam.room.Actor;
 
 public class CoupleAI extends WanderAI {
 
 	private boolean leader = false;
-	private Transform2D following;
+	private CharacterActor following;
 	
 	public CoupleAI(Actor actor, float minX, float minY, float maxX, float maxY) {
 		super(actor, minX, minY, maxX, maxY);
@@ -20,7 +19,7 @@ public class CoupleAI extends WanderAI {
 	}
 
 	public void setFollowing(CharacterActor actor) {
-		this.following = actor.transform;
+		this.following = actor;
 		this.leader = false;
 		actor.setLeaderFor(this);
 	}
@@ -36,10 +35,12 @@ public class CoupleAI extends WanderAI {
 	
 	@Override
 	public void update(float delta) {
-		if(this.leader || this.following != null) {
+		if(this.leader || this.following == null) {
 			super.update(delta);
 		} else {
-			super.moveTowards(this.following.position, delta);
+			CoupleAI other = this.following.getCoupleAI();
+			super.moveDirection(other.getCurrentDirection(), delta);
+			this.actorTransform.scale.x = other.facing();
 		}
 	}
 	

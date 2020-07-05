@@ -12,6 +12,7 @@ import com.jam.render.sprites.Sprite;
 import com.jam.render.sprites.SpriteList;
 import com.jam.render.sprites.SpriteList.SpriteData;
 import com.jam.render.tilemap.Tilemap;
+import com.jam.ui.UiLine;
 import com.jam.ui.UiSprite;
 
 public abstract class Room {
@@ -82,6 +83,15 @@ public abstract class Room {
 	
 	protected void denotifyActorSprite(Sprite sprite) {
 		this.spriteRenderer.denotify(sprite);
+	}
+	
+	public <T extends UiLine> T addUiElement(T element) {
+		this.uiRenderer.notify(element);
+		return element;
+	}
+	
+	public void removeUiElement(UiLine element) {
+		this.uiRenderer.denotify(element);
 	}
 	
 	public void setTilemap(Tilemap tilemap) {

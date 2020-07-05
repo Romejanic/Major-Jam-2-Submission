@@ -53,6 +53,8 @@ public class Camera {
 		this.camMatrix.transform(pos);
 		pos.x = (pos.x * 0.5f + 0.5f) * this.screenWidth;
 		pos.y = (pos.y * 0.5f + 0.5f) * this.screenHeight;
+		pos.x -= this.screenWidth / 2;
+		pos.y -= this.screenHeight / 2;
 		return Util.TEMP_VEC2.set(pos.x, pos.y);
 	}
 	

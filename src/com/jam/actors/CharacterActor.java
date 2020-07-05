@@ -66,7 +66,7 @@ public class CharacterActor extends Actor {
 		this.couple = new CoupleAI(this, this.wander.minBound, this.wander.maxBound);
 		this.couple.setFollowing(other);
 		this.wander = null;
-		Vector2f rnd = Util.getRandomPointOnUnitCircle();
+		Vector2f rnd = Util.getRandomPointOnUnitCircle().mul(3f);
 		this.transform.position.set(other.transform.position).sub(rnd.x, rnd.y, 0f);
 	}
 
@@ -77,6 +77,10 @@ public class CharacterActor extends Actor {
 	
 	public boolean isInCouple() {
 		return this.couple != null;
+	}
+	
+	public CoupleAI getCoupleAI() {
+		return this.couple;
 	}
 	
 	// align compatability and happiness factors so they are more

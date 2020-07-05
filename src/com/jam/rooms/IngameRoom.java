@@ -9,8 +9,10 @@ import org.joml.Vector3f;
 import com.jam.actors.CharacterActor;
 import com.jam.main.Main;
 import com.jam.math.Color;
+import com.jam.render.Camera;
 import com.jam.render.tilemap.Tilemap;
 import com.jam.room.Room;
+import com.jam.ui.UiLine;
 import com.jam.ui.UiNumberLabel;
 import com.jam.ui.UiSprite;
 import com.jam.util.Util;
@@ -106,6 +108,7 @@ public class IngameRoom extends Room {
 		float compat, happy;
 		UiSprite indicator;
 		UiNumberLabel num;
+		UiLine[] lines;
 		
 		private CoupleData(CharacterActor a, CharacterActor b) {
 			this.a = a;
@@ -114,18 +117,29 @@ public class IngameRoom extends Room {
 			this.happy = b.getCompatabilityScore(b);
 			
 			IngameRoom room = IngameRoom.this;
-			this.indicator = room.addUiElement(new UiSprite("compat", 0, 0));
+			this.indicator = room.addUiElement(new UiSprite("compat", 0, 0, 2f));
 			this.num = new UiNumberLabel((int)(this.compat*100f), 0, 0, 2f, room);
+			
+			this.lines = new UiLine[2];
+			for(int i = 0; i < lines.length; i++) {
+				this.lines[i] = room.addUiElement(new UiLine(0f, 0f, 0f, 0f));
+			}
 			
 			this.updateUi();
 		}
 		
 		private void updateUi() {
+			Camera cam = IngameRoom.this.getCamera();
 			Vector3f mid = Util.midpoint(a.transform.position, b.transform.position);
-			Vector2f pos = IngameRoom.this.getCamera().worldPointToScreen(mid);
+			Vector2f pos = cam.worldPointToScreen(mid);
 			int px = (int)pos.x, py = (int)pos.y;
+			// connect lines
+			this.lines[0].a.set(px, py);
+			this.lines[1].a.set(px, py);
+			this.lines[0].b.set(cam.worldPointToScreen(a.transform.position));
+			this.lines[1].b.set(cam.worldPointToScreen(b.transform.position));
 			// position ui elements
-			this.indicator.posX = px;
+			this.indicator.posX = px - 10;
 			this.indicator.posY = py + 30;
 			this.num.moveTo(px + 10, py + 30);
 		}
@@ -133,6 +147,9 @@ public class IngameRoom extends Room {
 		private void end() {
 			IngameRoom.this.removeUiElement(this.indicator);
 			this.num.remove();
+			for(UiLine line : this.lines) {
+				IngameRoom.this.removeUiElement(line);
+			}
 		}
 	}
 	

@@ -1,9 +1,7 @@
 package com.jam.actors.ai;
 
 import org.joml.Vector2f;
-import org.joml.Vector2fc;
 import org.joml.Vector3f;
-import org.joml.Vector3fc;
 
 import com.jam.math.Transform2D;
 import com.jam.room.Actor;
@@ -25,6 +23,11 @@ public class WanderAI {
 	}
 	
 	public void update(float delta) {
+		this.newMovePoint();
+		this.moveDirection(this.getCurrentDirection(), delta);
+	}
+	
+	private void newMovePoint() {
 		Vector3f actorPos = this.actorTransform.position;
 		if(this.movePoint == null) {
 			this.movePoint = new Vector2f(actorPos.x, actorPos.y);
@@ -37,19 +40,23 @@ public class WanderAI {
 			float dx = this.movePoint.x - actorPos.x;
 			this.actorTransform.scale.x = Math.signum(dx);
 		}
-		this.moveTowards(this.movePoint, delta);
 	}
 	
-	protected void moveTowards(Vector2fc point, float delta) {
+	protected Vector2f getCurrentDirection() {
+		if(this.movePoint == null)
+			this.newMovePoint();
 		Vector3f actorPos = this.actorTransform.position;
-		float speed = this.moveSpeed * delta;
-		point.sub(actorPos.x(), actorPos.y(), this.deltaPos);
-		this.deltaPos.normalize().mul(speed);
-		actorPos.add(this.deltaPos.x, this.deltaPos.y, 0f);
+		return this.movePoint.sub(actorPos.x(), actorPos.y(), this.deltaPos); 
 	}
 	
-	protected void moveTowards(Vector3fc point, float delta) {
-		this.moveTowards(this.deltaPos.set(point.x(), point.y()), delta);
+	protected void moveDirection(Vector2f direction, float delta) {
+		float speed = this.moveSpeed * delta;
+		this.deltaPos.set(direction.x, direction.y).normalize(speed);
+		this.actorTransform.position.add(this.deltaPos.x, this.deltaPos.y, 0f);
+	}
+	
+	protected float facing() {
+		return this.actorTransform.scale.x;
 	}
 	
 	private float lerp(float a, float b, float x) {
