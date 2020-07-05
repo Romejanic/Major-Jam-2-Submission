@@ -42,4 +42,12 @@ public class Util {
 		return new Vector2f((float)Math.cos(a), (float)Math.sin(a)).normalize();
 	}
 	
+	public static Vector3f getRandomUnitDirection() {
+		return new Vector3f(
+			(float)Math.random() * 2f - 1f,
+			(float)Math.random() * 2f - 1f,
+			(float)Math.random() * 2f - 1f
+		).normalize();
+	}
+	
 }

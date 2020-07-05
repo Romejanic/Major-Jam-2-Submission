@@ -1,6 +1,7 @@
 package com.jam.actors;
 
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 
 import com.jam.actors.ai.CoupleAI;
 import com.jam.actors.ai.WanderAI;
@@ -19,6 +20,9 @@ public class CharacterActor extends Actor {
 	private int legState = 0;
 	private boolean isMale = false;
 
+	private Vector3f compatabilityFactor;
+	private Vector3f happinessFactor;
+	
 	private WanderAI wander;
 	private CoupleAI couple;
 
@@ -39,6 +43,9 @@ public class CharacterActor extends Actor {
 		// head sprite
 		this.head = this.addSprite(new Sprite("head_" + spriteSuffix).matchAspect());
 		this.head.transform.position.y = 1.85f;
+		// factors
+		this.compatabilityFactor = Util.getRandomUnitDirection();
+		this.happinessFactor = Util.getRandomUnitDirection();
 	}
 	
 	public CharacterActor() {
@@ -70,6 +77,27 @@ public class CharacterActor extends Actor {
 	
 	public boolean isInCouple() {
 		return this.couple != null;
+	}
+	
+	// align compatability and happiness factors so they are more
+	// likely to like each other (and won't hate each other)
+	public void doInitialRelationship(CharacterActor other) {
+		// compatability
+		Vector3f compatStart = Util.TEMP_VEC3.set(other.compatabilityFactor).cross(this.compatabilityFactor);
+		Vector3f compatEnd = this.compatabilityFactor;
+		other.compatabilityFactor.set(compatStart).lerp(compatEnd, (float)Math.random());
+		// happiness
+		Vector3f happyStart = Util.TEMP_VEC3.set(other.happinessFactor).cross(this.happinessFactor);
+		Vector3f happyEnd = this.happinessFactor;
+		other.happinessFactor.set(happyStart).lerp(happyEnd, (float)Math.random());
+	}
+	
+	public float getCompatabilityScore(CharacterActor character) {
+		return this.compatabilityFactor.dot(character.compatabilityFactor) * 0.5f + 0.5f;
+	}
+	
+	public float getHappinessScore(CharacterActor character) {
+		return this.happinessFactor.dot(character.happinessFactor) * 0.5f + 0.5f;
 	}
 	
 	@Override

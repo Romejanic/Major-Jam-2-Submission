@@ -8,7 +8,6 @@ import com.jam.ui.UiSprite;
 
 public class IngameRoom extends Room {
 
-	private UiNumberLabel scoreLabel;
 	private UiNumberLabel timeLabel;
 	private UiSprite timeUpSprite;
 	
@@ -21,7 +20,6 @@ public class IngameRoom extends Room {
 	public void populate() {
 		this.setTilemap(new Tilemap("love_tile").setWidth(30f));
 		// labels
-		this.scoreLabel = new UiNumberLabel(0, 0, 260, 6f, this);
 		this.timeLabel = new UiNumberLabel(60, 360, 280, this);
 		this.addUiElement(new UiSprite("timer", 385, 280, 2f));
 		// characters
@@ -39,6 +37,7 @@ public class IngameRoom extends Room {
 			CharacterActor a = this.getRandomSingleChar();
 			CharacterActor b = this.getRandomSingleChar();
 			a.setFollowing(b);
+			a.doInitialRelationship(b);
 		}
 	}
 
