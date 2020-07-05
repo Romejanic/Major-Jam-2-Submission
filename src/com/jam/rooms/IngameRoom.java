@@ -110,17 +110,18 @@ public class IngameRoom extends Room {
 			if(this.isSomeoneSelected() && this.scrim.tint.a < 1f) {
 				this.scrim.tint.a = Math.min(0.5f, this.scrim.tint.a + delta);
 				CharacterActor character = this.chars[this.selectedChar];
-				float mx = (float)input.getMouseX() - Main.getInstance().getFrameWidth() / 2;
-				float my = (float)input.getMouseY() - Main.getInstance().getFrameHeight() / 2;
-				this.selectedLine.a.set(mx, -my);
+				this.selectedLine.b.set(this.getCamera().worldPointToScreen(character.transform.position));
 				if(this.hoveredChar == -1) {
-					this.selectedLine.b.set(this.getCamera().worldPointToScreen(character.transform.position));
+					float mx = (float)input.getMouseX() - Main.getInstance().getFrameWidth() / 2;
+					float my = (float)input.getMouseY() - Main.getInstance().getFrameHeight() / 2;
+					this.selectedLine.a.set(mx, -my);
 				} else {
 					Vector3f pos = this.chars[this.hoveredChar].transform.position;
-					this.selectedLine.b.set(pos.x, pos.y);
+					Vector2f screenPos = this.getCamera().worldPointToScreen(pos);
+					this.selectedLine.a.set(screenPos.x, screenPos.y);
 					int score = (int)(100f * character.getCompatabilityScore(this.chars[this.hoveredChar]));
 					this.compatHighlight.set(score);
-					Vector2f screenPos = this.getCamera().worldPointToScreen(pos);
+					screenPos.set(this.getCamera().worldPointToScreen(pos));
 					this.compatHighlight.moveTo((int)screenPos.x, (int)screenPos.y);
 				}
 				if(input.isMouseButtonPressed(MouseButton.LEFT)) {
