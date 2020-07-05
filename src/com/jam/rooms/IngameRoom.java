@@ -1,7 +1,9 @@
 package com.jam.rooms;
 
 import com.jam.actors.CharacterActor;
+import com.jam.input.InputManager;
 import com.jam.main.Main;
+import com.jam.math.Color;
 import com.jam.render.tilemap.Tilemap;
 import com.jam.room.Room;
 import com.jam.ui.UiNumberLabel;
@@ -11,6 +13,7 @@ public class IngameRoom extends Room {
 
 	private UiNumberLabel timeLabel;
 	private UiSprite timeUpSprite;
+	private UiSprite scrim;
 	
 	private float gameTimer = 60f;
 	private boolean gameOver = false;
@@ -32,6 +35,12 @@ public class IngameRoom extends Room {
 			this.chars[i].transform.position.x = -30f + (float)Math.random() * 60f;
 			this.chars[i].transform.position.y = -10f + (float)Math.random() * 20f;
 		}
+		// scrim
+		this.scrim = this.addUiElement(new UiSprite("white", 0, 0));
+		this.scrim.width = Main.getInstance().getFrameWidth();
+		this.scrim.height = Main.getInstance().getFrameHeight();
+		this.scrim.tint = new Color(0f, 0f, 0f, 0f);
+		this.scrim.sortingOrder = 10000;
 		// make some couples
 		int nCouples = 1 + (int)Math.random() * 3;
 		for(int i = 0; i < nCouples; i++) {
@@ -66,8 +75,6 @@ public class IngameRoom extends Room {
 				this.timeUpSprite.tint.a = Math.min(1f, this.timeUpSprite.tint.a);
 			}
 		}
-		// test
-		System.out.println(this.getCamera().screenPointToWorld(Main.getInput().getMouseX(), Main.getInput().getMouseY()));
 	}
 
 	private CharacterActor getRandomSingleChar() {
