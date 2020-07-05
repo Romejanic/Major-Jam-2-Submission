@@ -2,6 +2,7 @@ package com.jam.render;
 
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import com.jam.math.Transform2D;
@@ -44,7 +45,15 @@ public class Camera {
 		pos.y = (pos.y / this.screenHeight) * 2f - 1f;
 		Matrix4f invCam = this.camMatrix.invert(Util.TEMP_MAT4);
 		invCam.transform(pos);
-		return new Vector2f(pos.x, pos.y);
+		return Util.TEMP_VEC2.set(pos.x, pos.y);
+	}
+	
+	public Vector2f worldPointToScreen(Vector3f vec) {
+		Vector4f pos = Util.TEMP_VEC4.set(vec, 1f);
+		this.camMatrix.transform(pos);
+		pos.x = (pos.x * 0.5f + 0.5f) * this.screenWidth;
+		pos.y = (pos.y * 0.5f + 0.5f) * this.screenHeight;
+		return Util.TEMP_VEC2.set(pos.x, pos.y);
 	}
 	
 }

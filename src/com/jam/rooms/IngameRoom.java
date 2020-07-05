@@ -1,13 +1,19 @@
 package com.jam.rooms;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.joml.Vector2f;
+import org.joml.Vector3f;
+
 import com.jam.actors.CharacterActor;
-import com.jam.input.InputManager;
 import com.jam.main.Main;
 import com.jam.math.Color;
 import com.jam.render.tilemap.Tilemap;
 import com.jam.room.Room;
 import com.jam.ui.UiNumberLabel;
 import com.jam.ui.UiSprite;
+import com.jam.util.Util;
 
 public class IngameRoom extends Room {
 
@@ -19,6 +25,7 @@ public class IngameRoom extends Room {
 	private boolean gameOver = false;
 	
 	private CharacterActor[] chars;
+	private List<CoupleData> couples = new ArrayList<CoupleData>();
 	
 	@Override
 	public void populate() {
@@ -46,8 +53,8 @@ public class IngameRoom extends Room {
 		for(int i = 0; i < nCouples; i++) {
 			CharacterActor a = this.getRandomSingleChar();
 			CharacterActor b = this.getRandomSingleChar();
-			a.setFollowing(b);
 			a.doInitialRelationship(b);
+			this.makeCouple(a, b);
 		}
 	}
 
@@ -58,6 +65,10 @@ public class IngameRoom extends Room {
 		int intTimer = (int) Math.max(0, Math.ceil((double)this.gameTimer));
 		if(this.timeLabel.get() != intTimer) {
 			this.timeLabel.set(intTimer);
+		}
+		// update couples
+		for(CoupleData couple : this.couples) {
+			couple.updateUi();
 		}
 		// gameover
 		if(intTimer == 0) {
@@ -83,6 +94,46 @@ public class IngameRoom extends Room {
 			c = this.chars[(int)(Math.random()*this.chars.length)];
 		} while(c.isInCouple());
 		return c;
+	}
+	
+	private void makeCouple(CharacterActor a, CharacterActor b) {
+		a.setFollowing(b);
+		this.couples.add(new CoupleData(a, b));
+	}
+	
+	class CoupleData {
+		CharacterActor a, b;
+		float compat, happy;
+		UiSprite indicator;
+		UiNumberLabel num;
+		
+		private CoupleData(CharacterActor a, CharacterActor b) {
+			this.a = a;
+			this.b = b;
+			this.compat = a.getCompatabilityScore(b);
+			this.happy = b.getCompatabilityScore(b);
+			
+			IngameRoom room = IngameRoom.this;
+			this.indicator = room.addUiElement(new UiSprite("compat", 0, 0));
+			this.num = new UiNumberLabel((int)(this.compat*100f), 0, 0, 2f, room);
+			
+			this.updateUi();
+		}
+		
+		private void updateUi() {
+			Vector3f mid = Util.midpoint(a.transform.position, b.transform.position);
+			Vector2f pos = IngameRoom.this.getCamera().worldPointToScreen(mid);
+			int px = (int)pos.x, py = (int)pos.y;
+			// position ui elements
+			this.indicator.posX = px;
+			this.indicator.posY = py + 30;
+			this.num.moveTo(px + 10, py + 30);
+		}
+		
+		private void end() {
+			IngameRoom.this.removeUiElement(this.indicator);
+			this.num.remove();
+		}
 	}
 	
 }

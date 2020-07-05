@@ -49,14 +49,18 @@ public class UiNumberLabel {
 		});
 	}
 	
+	public void remove() {
+		for(UiSprite sprite : this.sprites) {
+			this.room.removeUiElement(sprite);
+		}
+		this.sprites.clear();
+	}
+	
 	private void refresh() {
 		if(this.sprites == null) {
 			this.sprites = new ArrayList<UiSprite>();
 		} else {
-			for(UiSprite sprite : this.sprites) {
-				this.room.removeUiElement(sprite);
-			}
-			this.sprites.clear();
+			this.remove();
 		}
 		int temp = this.number;
 		if(temp == 0) {

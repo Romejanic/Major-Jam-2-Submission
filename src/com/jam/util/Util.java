@@ -14,6 +14,7 @@ import com.google.gson.GsonBuilder;
 
 public class Util {
 
+	public static final Vector2f TEMP_VEC2 = new Vector2f();
 	public static final Vector3f TEMP_VEC3 = new Vector3f();
 	public static final Vector4f TEMP_VEC4 = new Vector4f();
 	public static final Matrix4f TEMP_MAT4 = new Matrix4f();
@@ -52,6 +53,10 @@ public class Util {
 			(float)Math.random() * 2f - 1f,
 			(float)Math.random() * 2f - 1f
 		).normalize();
+	}
+	
+	public static Vector3f midpoint(Vector3f a, Vector3f b) {
+		return a.lerp(b, 0.5f, TEMP_VEC3);
 	}
 	
 }
