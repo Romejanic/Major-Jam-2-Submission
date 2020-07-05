@@ -67,13 +67,11 @@ public class CharacterActor extends Actor {
 	public void setLeaderFor(CoupleAI ai) {
 		this.couple = new CoupleAI(this, this.wander.minBound, this.wander.maxBound);
 		this.couple.setLeader();
-		this.wander = null;
 	}
 	
 	public void setFollowing(CharacterActor other) {
 		this.couple = new CoupleAI(this, this.wander.minBound, this.wander.maxBound);
 		this.couple.setFollowing(other);
-		this.wander = null;
 		Vector2f rnd = Util.getRandomPointOnUnitCircle().mul(3f);
 		this.transform.position.set(other.transform.position).sub(rnd.x, rnd.y, 0f);
 	}
@@ -122,10 +120,10 @@ public class CharacterActor extends Actor {
 		this.animTime += delta;
 		this.legMoveTime += delta;
 		this.setActorSortingOrder((int)(100f*this.transform.position.y));
-		if(this.wander != null) {
-			this.wander.update(delta);
-		} else if(this.couple != null) {
+		if(this.couple != null) {
 			this.couple.update(delta);
+		} else if(this.wander != null) {
+			this.wander.update(delta);
 		}
 		// animations
 		if(this.isMale) {
@@ -180,8 +178,12 @@ public class CharacterActor extends Actor {
 					this.setActorTint(new Color(0.5f));
 					ingame.hover(this.charIndex);
 				}
-				if(!ingame.isSomeoneSelected() && input.isMouseButtonPressed(MouseButton.LEFT)) {
-					ingame.select(this.charIndex);
+				if(input.isMouseButtonPressed(MouseButton.LEFT)) {
+					if(!ingame.isSomeoneSelected()) {
+						ingame.select(this.charIndex);
+					} else {
+						ingame.makeCoupleWithSelected(this);
+					}
 				}
 			} else if(this.tintState != 0) {
 				this.tintState = 0;

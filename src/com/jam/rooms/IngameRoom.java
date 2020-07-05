@@ -124,7 +124,7 @@ public class IngameRoom extends Room {
 					screenPos.set(this.getCamera().worldPointToScreen(pos));
 					this.compatHighlight.moveTo((int)screenPos.x, (int)screenPos.y);
 				}
-				if(input.isMouseButtonPressed(MouseButton.LEFT)) {
+				if(input.isMouseButtonPressed(MouseButton.LEFT) && this.hoveredChar == -1) {
 					this.selectedChar = -1;
 				}
 			} else if(!this.isSomeoneSelected() && this.scrim.tint.a > 0f) {
@@ -141,9 +141,35 @@ public class IngameRoom extends Room {
 		return c;
 	}
 	
+	public void makeCoupleWithSelected(CharacterActor other) {
+		CharacterActor selected = this.chars[this.selectedChar];
+		CoupleData aCouple = this.getCoupleFor(selected);
+		CoupleData bCouple = this.getCoupleFor(other);
+		if(aCouple != null) {
+			aCouple.end();
+			selected.breakup();
+		}
+		if(bCouple != null) {
+			bCouple.end();
+			other.breakup();
+		}
+		this.makeCouple(selected, other);
+		this.selectedChar = -1;
+		this.hoveredChar = -1;
+	}
+	
 	private void makeCouple(CharacterActor a, CharacterActor b) {
 		a.setFollowing(b);
 		this.couples.add(new CoupleData(a, b));
+	}
+	
+	private CoupleData getCoupleFor(CharacterActor actor) {
+		for(CoupleData data : this.couples) {
+			if(data.a == actor || data.b == actor) {
+				return data;
+			}
+		}
+		return null;
 	}
 	
 	public boolean isGameOver() {
