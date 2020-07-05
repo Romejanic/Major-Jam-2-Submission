@@ -53,6 +53,13 @@ public class UiNumberLabel {
 			this.sprites.clear();
 		}
 		int temp = this.number;
+		if(temp == 0) {
+			UiSprite zero = new UiSprite("0", this.posX, this.posY);
+			zero.scale = 3f;
+			this.sprites.add(zero);
+			this.room.addUiElement(zero);
+			return;
+		}
 		int xOff = 0;
 		while(temp > 0) {
 			int digit = temp % 10;

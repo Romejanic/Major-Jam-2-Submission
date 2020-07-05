@@ -5,24 +5,21 @@ import com.jam.room.Room;
 import com.jam.ui.UiNumberLabel;
 
 public class IngameRoom extends Room {
-	
-	private UiNumberLabel testNumber;
-	private int teee;
-	private int c;
+
+	private UiNumberLabel scoreLabel;
+	private UiNumberLabel timeLabel;
 	
 	@Override
 	public void populate() {
 		this.setTilemap(new Tilemap("love_tile").setWidth(30f));
-		this.testNumber = new UiNumberLabel(1000, 0, 150, this);
+		// labels
+		this.scoreLabel = new UiNumberLabel(0, 0, 280, this);
+		this.timeLabel = new UiNumberLabel(60, 320, 280, this);
 	}
 
 	@Override
 	public void updateRoom(float delta) {
-		teee++;
-		if(teee % 60 == 0) {
-			c++;
-			this.testNumber.set(c);
-		}
+		
 	}
 
 }
