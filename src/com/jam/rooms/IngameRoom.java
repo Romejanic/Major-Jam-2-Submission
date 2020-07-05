@@ -29,6 +29,7 @@ public class IngameRoom extends Room {
 	private float startTimer = 3f;
 	private float gameTimer = 60f;
 	private boolean gameOver = false;
+	private boolean showResults = false;
 	
 	private CharacterActor[] chars;
 	private List<CoupleData> couples = new ArrayList<CoupleData>();
@@ -80,6 +81,13 @@ public class IngameRoom extends Room {
 
 	@Override
 	public void updateRoom(float delta) {
+		// show results
+		if(this.showResults) {
+			if(this.scrim.tint.a < 1f) {
+				this.scrim.tint.a = Math.min(1f, this.scrim.tint.a + delta);
+			}
+			return;
+		}
 		// start timer
 		if(this.startTimer > 0f) {
 			this.startTimer -= delta;
@@ -98,6 +106,10 @@ public class IngameRoom extends Room {
 		int intTimer = (int) Math.max(0, Math.ceil((double)this.gameTimer));
 		if(this.timeLabel.get() != intTimer) {
 			this.timeLabel.set(intTimer);
+		}
+		if(this.gameTimer < -5f) {
+			this.showResults = true;
+			this.scrim.tint = new Color(0.76f, 0.01f, 1f, 0f);
 		}
 		// update couples
 		for(CoupleData couple : this.couples) {
