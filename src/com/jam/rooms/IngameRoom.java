@@ -147,11 +147,11 @@ public class IngameRoom extends Room {
 		CoupleData bCouple = this.getCoupleFor(other);
 		if(aCouple != null) {
 			aCouple.end();
-			selected.breakup();
+			selected.breakup(aCouple.happy);
 		}
 		if(bCouple != null) {
 			bCouple.end();
-			other.breakup();
+			other.breakup(bCouple.happy);
 		}
 		this.makeCouple(selected, other);
 		this.selectedChar = -1;
@@ -160,7 +160,10 @@ public class IngameRoom extends Room {
 	
 	private void makeCouple(CharacterActor a, CharacterActor b) {
 		a.setFollowing(b);
-		this.couples.add(new CoupleData(a, b));
+		CoupleData data = new CoupleData(a, b);
+		this.couples.add(data);
+		a.updateFace(data.happy);
+		b.updateFace(data.happy);
 	}
 	
 	private CoupleData getCoupleFor(CharacterActor actor) {

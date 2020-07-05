@@ -19,7 +19,8 @@ public class CharacterActor extends Actor {
 	private Sprite head;
 	private Sprite leftLeg;
 	private Sprite rightLeg;
-
+	private final String spriteSuffix;
+	
 	private float animTime = 0f;
 	private float legMoveTime = 0f;
 	private int legState = 0;
@@ -37,7 +38,7 @@ public class CharacterActor extends Actor {
 	public CharacterActor(boolean isMale) {
 		this.isMale = isMale;
 		this.animTime += (float)Math.random();
-		String spriteSuffix = this.isMale ? "male" : "female";
+		this.spriteSuffix = this.isMale ? "male" : "female";
 		// left leg
 		this.leftLeg = this.addSprite(new Sprite("leg_l")).matchAspect();
 		this.leftLeg.transform.position.x = 0.2f;
@@ -49,7 +50,7 @@ public class CharacterActor extends Actor {
 		// torso sprite
 		this.addSprite(new Sprite("torso").matchAspect());
 		// head sprite
-		this.head = this.addSprite(new Sprite("head_" + spriteSuffix).matchAspect());
+		this.head = this.addSprite(new Sprite("head_" + this.spriteSuffix).matchAspect());
 		this.head.transform.position.y = 1.85f;
 		// factors
 		this.compatabilityFactor = Util.getRandomUnitDirection();
@@ -76,7 +77,8 @@ public class CharacterActor extends Actor {
 		this.transform.position.set(other.transform.position).sub(rnd.x, rnd.y, 0f);
 	}
 
-	public void breakup() {
+	public void breakup(float happiness) {
+		this.updateFace(1f - happiness);
 		this.couple.breakup();
 		this.couple = null;
 	}
@@ -92,6 +94,12 @@ public class CharacterActor extends Actor {
 	public CharacterActor setIndex(int i) {
 		this.charIndex = i;
 		return this;
+	}
+	
+	public void updateFace(float happiness) {
+		if(happiness <= 0.4f) {
+			this.replaceSprite(3, "head_" + this.spriteSuffix + "_sad");
+		}
 	}
 	
 	// align compatability and happiness factors so they are more

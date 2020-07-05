@@ -7,6 +7,7 @@ import com.jam.math.Color;
 import com.jam.math.Transform2D;
 import com.jam.render.Camera;
 import com.jam.render.sprites.Sprite;
+import com.jam.render.sprites.SpriteList;
 
 public class Actor {
 
@@ -57,6 +58,13 @@ public class Actor {
 		for(Sprite sprite : this.sprites) {
 			sprite.sortingOrder = order;
 		}
+	}
+	
+	public void replaceSprite(int index, String spriteName) {
+		Sprite sprite = this.getSpriteAt(index);
+		this.currentRoom.denotifyActorSprite(sprite);
+		sprite.sprite = SpriteList.getSprite(spriteName);
+		this.currentRoom.notifyActorSprite(sprite);
 	}
 	
 	public Iterator<Sprite> getSpriteIterator() {
