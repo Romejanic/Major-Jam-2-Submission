@@ -13,8 +13,8 @@ public class IngameRoom extends Room {
 	public void populate() {
 		this.setTilemap(new Tilemap("love_tile").setWidth(30f));
 		// labels
-		this.scoreLabel = new UiNumberLabel(0, 0, 280, this);
-		this.timeLabel = new UiNumberLabel(60, 320, 280, this);
+		this.scoreLabel = new UiNumberLabel(0, 0, 260, 6f, this);
+		this.timeLabel = new UiNumberLabel(60, 360, 280, this);
 	}
 
 	@Override

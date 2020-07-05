@@ -11,14 +11,20 @@ public class UiNumberLabel {
 	
 	private int number;
 	private int posX, posY;
+	private float scale;
 	private List<UiSprite> sprites;
 	
-	public UiNumberLabel(int number, int posX, int posY, Room room) {
+	public UiNumberLabel(int number, int posX, int posY, float scale, Room room) {
 		this.number = number;
 		this.room = room;
 		this.posX = posX;
 		this.posY = posY;
+		this.scale = scale;
 		this.refresh();
+	}
+	
+	public UiNumberLabel(int number, int posX, int posY, Room room) {
+		this(number, posX, posY, 3f, room);
 	}
 	
 	public int get() {
@@ -55,7 +61,7 @@ public class UiNumberLabel {
 		int temp = this.number;
 		if(temp == 0) {
 			UiSprite zero = new UiSprite("0", this.posX, this.posY);
-			zero.scale = 3f;
+			zero.scale = this.scale;
 			this.sprites.add(zero);
 			this.room.addUiElement(zero);
 			return;
@@ -64,7 +70,7 @@ public class UiNumberLabel {
 		while(temp > 0) {
 			int digit = temp % 10;
 			UiSprite sprite = new UiSprite(String.valueOf(digit), this.posX - xOff, this.posY);
-			sprite.scale = 3f;
+			sprite.scale = this.scale;
 			this.sprites.add(sprite);
 			this.room.addUiElement(sprite);
 			temp = temp / 10;
