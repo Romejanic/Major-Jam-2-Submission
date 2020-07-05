@@ -31,15 +31,21 @@ public class IngameRoom extends Room {
 	private CharacterActor[] chars;
 	private List<CoupleData> couples = new ArrayList<CoupleData>();
 	
+	private int hoveredChar = -1;
 	private int selectedChar = -1;
 	private UiLine selectedLine = new UiLine(0f,0f,0f,0f);
+	private UiNumberLabel compatHighlight;
 	
 	@Override
 	public void populate() {
 		this.setTilemap(new Tilemap("love_tile").setWidth(30f));
+		// selection line
 		this.selectedLine.enabled = false;
 		this.selectedLine.color = new Color(1f, 0.38f, 0.98f);
 		this.addUiElement(this.selectedLine);
+		// compat highlight
+		this.compatHighlight = new UiNumberLabel(0, 0, 0, 2f, true, this).setPrefix("compat");
+		this.compatHighlight.setEnabled(false);
 		// labels
 		this.timeLabel = new UiNumberLabel(60, 360, 280, this);
 		this.addUiElement(new UiSprite("timer", 385, 280, 2f));
@@ -100,14 +106,23 @@ public class IngameRoom extends Room {
 		else {
 			InputManager input = Main.getInput();
 			this.selectedLine.enabled = this.isSomeoneSelected();
+			this.compatHighlight.setEnabled(this.isSomeoneSelected() && this.hoveredChar > -1);
 			if(this.isSomeoneSelected() && this.scrim.tint.a < 1f) {
 				this.scrim.tint.a = Math.min(0.5f, this.scrim.tint.a + delta);
 				CharacterActor character = this.chars[this.selectedChar];
 				float mx = (float)input.getMouseX() - Main.getInstance().getFrameWidth() / 2;
 				float my = (float)input.getMouseY() - Main.getInstance().getFrameHeight() / 2;
 				this.selectedLine.a.set(mx, -my);
-				this.selectedLine.b.set(this.getCamera().worldPointToScreen(character.transform.position));
-				
+				if(this.hoveredChar == -1) {
+					this.selectedLine.b.set(this.getCamera().worldPointToScreen(character.transform.position));
+				} else {
+					Vector3f pos = this.chars[this.hoveredChar].transform.position;
+					this.selectedLine.b.set(pos.x, pos.y);
+					int score = (int)(100f * character.getCompatabilityScore(this.chars[this.hoveredChar]));
+					this.compatHighlight.set(score);
+					Vector2f screenPos = this.getCamera().worldPointToScreen(pos);
+					this.compatHighlight.moveTo((int)screenPos.x, (int)screenPos.y);
+				}
 				if(input.isMouseButtonPressed(MouseButton.LEFT)) {
 					this.selectedChar = -1;
 				}
@@ -139,6 +154,10 @@ public class IngameRoom extends Room {
 			return;
 		}
 		this.selectedChar = idx;
+	}
+	
+	public void hover(int idx) {
+		this.hoveredChar = idx;
 	}
 	
 	public boolean isSomeoneSelected() {

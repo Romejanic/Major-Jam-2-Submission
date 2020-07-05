@@ -16,6 +16,8 @@ public class UiNumberLabel {
 	private List<UiSprite> sprites;
 	private UiSprite prefix;
 	
+	private boolean enabled = true;
+	
 	public UiNumberLabel(int number, int posX, int posY, float scale, boolean percent, Room room) {
 		this.number = number;
 		this.room = room;
@@ -69,6 +71,15 @@ public class UiNumberLabel {
 		this.sprites.clear();
 	}
 	
+	public void setEnabled(boolean enabled) {
+		if(this.enabled == enabled) return;
+		this.enabled = enabled;
+		for(UiSprite sprite : this.sprites) {
+			sprite.enabled = enabled;
+		}
+		this.prefix.enabled = enabled;
+	}
+	
 	private void refresh() {
 		if(this.sprites == null) {
 			this.sprites = new ArrayList<UiSprite>();
@@ -79,6 +90,7 @@ public class UiNumberLabel {
 		int xOff = 0;
 		if(this.percent) {
 			UiSprite percent = new UiSprite("percent", this.posX, this.posY);
+			percent.enabled = this.enabled;
 			percent.scale = this.scale;
 			this.sprites.add(percent);
 			this.room.addUiElement(percent);
@@ -86,6 +98,7 @@ public class UiNumberLabel {
 		}
 		if(temp == 0) {
 			UiSprite zero = new UiSprite("0", this.posX - xOff, this.posY);
+			zero.enabled = this.enabled;
 			zero.scale = this.scale;
 			this.sprites.add(zero);
 			this.room.addUiElement(zero);
@@ -95,6 +108,7 @@ public class UiNumberLabel {
 			int digit = temp % 10;
 			UiSprite sprite = new UiSprite(String.valueOf(digit), this.posX - xOff, this.posY);
 			sprite.scale = this.scale;
+			sprite.enabled = this.enabled;
 			this.sprites.add(sprite);
 			this.room.addUiElement(sprite);
 			temp = temp / 10;

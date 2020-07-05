@@ -168,7 +168,7 @@ public class CharacterActor extends Actor {
 		// bounds
 		if(this.getCurrentRoom() instanceof IngameRoom) {
 			IngameRoom ingame = (IngameRoom)this.getCurrentRoom();
-			if(ingame.isGameOver() || ingame.isSomeoneSelected()) {
+			if(ingame.isGameOver()) {
 				return;
 			}
 			InputManager input = Main.getInput();
@@ -178,13 +178,15 @@ public class CharacterActor extends Actor {
 				if(this.tintState != 1) {
 					this.tintState = 1;
 					this.setActorTint(new Color(0.5f));
+					ingame.hover(this.charIndex);
 				}
-				if(input.isMouseButtonPressed(MouseButton.LEFT)) {
+				if(!ingame.isSomeoneSelected() && input.isMouseButtonPressed(MouseButton.LEFT)) {
 					ingame.select(this.charIndex);
 				}
 			} else if(this.tintState != 0) {
 				this.tintState = 0;
 				this.setActorTint(Color.WHITE);
+				ingame.hover(-1);
 			}
 		}
 	}
