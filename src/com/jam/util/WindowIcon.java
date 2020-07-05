@@ -27,13 +27,13 @@ public class WindowIcon {
 		ByteBuffer fullBuf = BufferUtils.createByteBuffer(png.getWidth()*png.getHeight()*4);
 		png.decode(fullBuf, png.getWidth() * 4, Format.RGBA);
 		in.close();
-
+		
 		ByteBuffer iconBuf = BufferUtils.createByteBuffer(iconData.w*iconData.h*4);
 		for(int y = 0; y < iconData.h; y++) {
-			int yc = iconData.y + y;
+			int yc = (iconData.y + y);
 			for(int x = 0; x < iconData.w; x++) {
-				int xc = iconData.x + x;
-				int i = (yc * iconData.w + xc) * 4;
+				int xc = (iconData.x + x);
+				int i = (yc * png.getWidth() + xc) * 4;
 				iconBuf.put(new byte[] {
 						fullBuf.get(i),
 						fullBuf.get(i+1),
