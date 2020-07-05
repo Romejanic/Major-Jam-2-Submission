@@ -7,6 +7,8 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import com.jam.actors.CharacterActor;
+import com.jam.input.InputManager;
+import com.jam.input.MouseButton;
 import com.jam.main.Main;
 import com.jam.math.Color;
 import com.jam.render.Camera;
@@ -30,10 +32,14 @@ public class IngameRoom extends Room {
 	private List<CoupleData> couples = new ArrayList<CoupleData>();
 	
 	private int selectedChar = -1;
+	private UiLine selectedLine = new UiLine(0f,0f,0f,0f);
 	
 	@Override
 	public void populate() {
 		this.setTilemap(new Tilemap("love_tile").setWidth(30f));
+		this.selectedLine.enabled = false;
+		this.selectedLine.color = new Color(1f, 0.38f, 0.98f);
+		this.addUiElement(this.selectedLine);
 		// labels
 		this.timeLabel = new UiNumberLabel(60, 360, 280, this);
 		this.addUiElement(new UiSprite("timer", 385, 280, 2f));
@@ -92,8 +98,19 @@ public class IngameRoom extends Room {
 		}
 		// selection ui
 		else {
+			InputManager input = Main.getInput();
+			this.selectedLine.enabled = this.isSomeoneSelected();
 			if(this.isSomeoneSelected() && this.scrim.tint.a < 1f) {
 				this.scrim.tint.a = Math.min(0.5f, this.scrim.tint.a + delta);
+				CharacterActor character = this.chars[this.selectedChar];
+				float mx = (float)input.getMouseX() - Main.getInstance().getFrameWidth() / 2;
+				float my = (float)input.getMouseY() - Main.getInstance().getFrameHeight() / 2;
+				this.selectedLine.a.set(mx, -my);
+				this.selectedLine.b.set(this.getCamera().worldPointToScreen(character.transform.position));
+				
+				if(input.isMouseButtonPressed(MouseButton.LEFT)) {
+					this.selectedChar = -1;
+				}
 			} else if(!this.isSomeoneSelected() && this.scrim.tint.a > 0f) {
 				this.scrim.tint.a = Math.max(0f, this.scrim.tint.a - delta);
 			}
@@ -131,7 +148,7 @@ public class IngameRoom extends Room {
 	class CoupleData {
 		CharacterActor a, b;
 		float compat, happy;
-		UiNumberLabel num;
+		UiNumberLabel compatNum, happyNum;
 		UiLine[] lines;
 		
 		private CoupleData(CharacterActor a, CharacterActor b) {
@@ -141,7 +158,8 @@ public class IngameRoom extends Room {
 			this.happy = b.getCompatabilityScore(b);
 			
 			IngameRoom room = IngameRoom.this;
-			this.num = new UiNumberLabel((int)(this.compat*100f), 0, 0, 2f, true, room).setPrefix("compat");
+			this.compatNum = new UiNumberLabel((int)(this.compat*100f), 0, 0, 2f, true, room).setPrefix("compat");
+			this.happyNum = new UiNumberLabel((int)(this.happy*100f), 0, 0, 2f, true, room).setPrefix("happy");
 			
 			this.lines = new UiLine[2];
 			for(int i = 0; i < lines.length; i++) {
@@ -162,11 +180,12 @@ public class IngameRoom extends Room {
 			this.lines[0].b.set(cam.worldPointToScreen(a.transform.position));
 			this.lines[1].b.set(cam.worldPointToScreen(b.transform.position));
 			// position ui elements
-			this.num.moveTo(px + 10, py + 30);
+			this.compatNum.moveTo(px + 10, py + 30);
+			this.happyNum.moveTo(px + 10, py + 60);
 		}
 		
 		private void end() {
-			this.num.remove();
+			this.compatNum.remove();
 			for(UiLine line : this.lines) {
 				IngameRoom.this.removeUiElement(line);
 			}
