@@ -3,7 +3,9 @@ package com.jam.room;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import com.jam.math.Color;
 import com.jam.math.Transform2D;
+import com.jam.render.Camera;
 import com.jam.render.sprites.Sprite;
 
 public class Actor {
@@ -35,6 +37,20 @@ public class Actor {
 	
 	public void moveTo(Room room) {
 		this.currentRoom = room;
+	}
+	
+	public Room getCurrentRoom() {
+		return this.currentRoom;
+	}
+	
+	public Camera getCurrentCamera() {
+		return this.currentRoom.getCamera();
+	}
+	
+	public void setActorTint(Color tint) {
+		for(Sprite sprite : this.sprites) {
+			sprite.tint = tint;
+		}
 	}
 	
 	public void setActorSortingOrder(int order) {

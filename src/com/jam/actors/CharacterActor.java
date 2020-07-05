@@ -5,8 +5,13 @@ import org.joml.Vector3f;
 
 import com.jam.actors.ai.CoupleAI;
 import com.jam.actors.ai.WanderAI;
+import com.jam.input.InputManager;
+import com.jam.input.MouseButton;
+import com.jam.main.Main;
+import com.jam.math.Color;
 import com.jam.render.sprites.Sprite;
 import com.jam.room.Actor;
+import com.jam.rooms.IngameRoom;
 import com.jam.util.Util;
 
 public class CharacterActor extends Actor {
@@ -25,6 +30,9 @@ public class CharacterActor extends Actor {
 	
 	private WanderAI wander;
 	private CoupleAI couple;
+	
+	private int charIndex = -1;
+	private int tintState = 0;
 
 	public CharacterActor(boolean isMale) {
 		this.isMale = isMale;
@@ -83,11 +91,16 @@ public class CharacterActor extends Actor {
 		return this.couple;
 	}
 	
+	public CharacterActor setIndex(int i) {
+		this.charIndex = i;
+		return this;
+	}
+	
 	// align compatability and happiness factors so they are more
 	// likely to like each other (and won't hate each other)
 	public void doInitialRelationship(CharacterActor other) {
 		// compatability
-		Vector3f compatStart = Util.TEMP_VEC3.set(other.compatabilityFactor).cross(this.compatabilityFactor);
+		Vector3f compatStart = this.compatabilityFactor.negate(Util.TEMP_VEC3);
 		Vector3f compatEnd = this.compatabilityFactor;
 		other.compatabilityFactor.set(compatStart).lerp(compatEnd, (float)Math.random());
 		// happiness
@@ -150,6 +163,28 @@ public class CharacterActor extends Actor {
 				this.rightLeg.transform.position.y = -2f;
 				this.rightLeg.transform.rotation.identity();
 				break;
+			}
+		}
+		// bounds
+		if(this.getCurrentRoom() instanceof IngameRoom) {
+			IngameRoom ingame = (IngameRoom)this.getCurrentRoom();
+			if(ingame.isGameOver() || ingame.isSomeoneSelected()) {
+				return;
+			}
+			InputManager input = Main.getInput();
+			Vector2f mousePos = this.getCurrentCamera().screenPointToWorld(input.getMouseX(), input.getMouseY());
+			mousePos.y = -mousePos.y;
+			if(mousePos.distanceSquared(this.transform.position.x, this.transform.position.y) < 4f) { // 2 units
+				if(this.tintState != 1) {
+					this.tintState = 1;
+					this.setActorTint(new Color(0.5f));
+				}
+				if(input.isMouseButtonPressed(MouseButton.LEFT)) {
+					ingame.select(this.charIndex);
+				}
+			} else if(this.tintState != 0) {
+				this.tintState = 0;
+				this.setActorTint(Color.WHITE);
 			}
 		}
 	}

@@ -29,6 +29,8 @@ public class IngameRoom extends Room {
 	private CharacterActor[] chars;
 	private List<CoupleData> couples = new ArrayList<CoupleData>();
 	
+	private int selectedChar = -1;
+	
 	@Override
 	public void populate() {
 		this.setTilemap(new Tilemap("love_tile").setWidth(30f));
@@ -39,7 +41,7 @@ public class IngameRoom extends Room {
 		this.chars = new CharacterActor[20];
 		for(int i = 0; i < this.chars.length; i++) {
 			boolean isMale = i < this.chars.length / 2;
-			this.chars[i] = this.addActor(new CharacterActor(isMale));
+			this.chars[i] = this.addActor(new CharacterActor(isMale)).setIndex(i);
 			this.chars[i].setWander(-30f, -10f, 30f, 10f);
 			this.chars[i].transform.position.x = -30f + (float)Math.random() * 60f;
 			this.chars[i].transform.position.y = -10f + (float)Math.random() * 20f;
@@ -51,7 +53,7 @@ public class IngameRoom extends Room {
 		this.scrim.tint = new Color(0f, 0f, 0f, 0f);
 		this.scrim.sortingOrder = 10000;
 		// make some couples
-		int nCouples = 1 + (int)Math.random() * 3;
+		int nCouples = 2 + (int)Math.random() * 2;
 		for(int i = 0; i < nCouples; i++) {
 			CharacterActor a = this.getRandomSingleChar();
 			CharacterActor b = this.getRandomSingleChar();
@@ -88,6 +90,14 @@ public class IngameRoom extends Room {
 				this.timeUpSprite.tint.a = Math.min(1f, this.timeUpSprite.tint.a);
 			}
 		}
+		// selection ui
+		else {
+			if(this.isSomeoneSelected() && this.scrim.tint.a < 1f) {
+				this.scrim.tint.a = Math.min(0.5f, this.scrim.tint.a + delta);
+			} else if(!this.isSomeoneSelected() && this.scrim.tint.a > 0f) {
+				this.scrim.tint.a = Math.max(0f, this.scrim.tint.a - delta);
+			}
+		}
 	}
 
 	private CharacterActor getRandomSingleChar() {
@@ -103,10 +113,24 @@ public class IngameRoom extends Room {
 		this.couples.add(new CoupleData(a, b));
 	}
 	
+	public boolean isGameOver() {
+		return this.gameOver;
+	}
+	
+	public void select(int idx) {
+		if(this.isSomeoneSelected() || idx < 0 || idx >= this.chars.length) {
+			return;
+		}
+		this.selectedChar = idx;
+	}
+	
+	public boolean isSomeoneSelected() {
+		return this.selectedChar != -1;
+	}
+	
 	class CoupleData {
 		CharacterActor a, b;
 		float compat, happy;
-		UiSprite indicator;
 		UiNumberLabel num;
 		UiLine[] lines;
 		
@@ -117,8 +141,7 @@ public class IngameRoom extends Room {
 			this.happy = b.getCompatabilityScore(b);
 			
 			IngameRoom room = IngameRoom.this;
-			this.indicator = room.addUiElement(new UiSprite("compat", 0, 0, 2f));
-			this.num = new UiNumberLabel((int)(this.compat*100f), 0, 0, 2f, room);
+			this.num = new UiNumberLabel((int)(this.compat*100f), 0, 0, 2f, true, room).setPrefix("compat");
 			
 			this.lines = new UiLine[2];
 			for(int i = 0; i < lines.length; i++) {
@@ -134,18 +157,15 @@ public class IngameRoom extends Room {
 			Vector2f pos = cam.worldPointToScreen(mid);
 			int px = (int)pos.x, py = (int)pos.y;
 			// connect lines
-			this.lines[0].a.set(px, py);
-			this.lines[1].a.set(px, py);
+			this.lines[0].a.set(px, py+30);
+			this.lines[1].a.set(px, py+30);
 			this.lines[0].b.set(cam.worldPointToScreen(a.transform.position));
 			this.lines[1].b.set(cam.worldPointToScreen(b.transform.position));
 			// position ui elements
-			this.indicator.posX = px - 10;
-			this.indicator.posY = py + 30;
 			this.num.moveTo(px + 10, py + 30);
 		}
 		
 		private void end() {
-			IngameRoom.this.removeUiElement(this.indicator);
 			this.num.remove();
 			for(UiLine line : this.lines) {
 				IngameRoom.this.removeUiElement(line);

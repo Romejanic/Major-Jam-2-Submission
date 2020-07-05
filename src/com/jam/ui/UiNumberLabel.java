@@ -12,19 +12,32 @@ public class UiNumberLabel {
 	private int number;
 	private int posX, posY;
 	private float scale;
+	private boolean percent = false;
 	private List<UiSprite> sprites;
+	private UiSprite prefix;
 	
-	public UiNumberLabel(int number, int posX, int posY, float scale, Room room) {
+	public UiNumberLabel(int number, int posX, int posY, float scale, boolean percent, Room room) {
 		this.number = number;
 		this.room = room;
 		this.posX = posX;
 		this.posY = posY;
 		this.scale = scale;
+		this.percent = percent;
 		this.refresh();
+	}
+	
+	public UiNumberLabel(int number, int posX, int posY, float scale, Room room) {
+		this(number, posX, posY, scale, false, room);
 	}
 	
 	public UiNumberLabel(int number, int posX, int posY, Room room) {
 		this(number, posX, posY, 3f, room);
+	}
+	
+	public UiNumberLabel setPrefix(String prefix) {
+		this.prefix = new UiSprite(prefix, 0, 0);
+		this.refresh();
+		return this;
 	}
 	
 	public int get() {
@@ -63,14 +76,21 @@ public class UiNumberLabel {
 			this.remove();
 		}
 		int temp = this.number;
+		int xOff = 0;
+		if(this.percent) {
+			UiSprite percent = new UiSprite("percent", this.posX, this.posY);
+			percent.scale = this.scale;
+			this.sprites.add(percent);
+			this.room.addUiElement(percent);
+			xOff += 8 * percent.scale;
+		}
 		if(temp == 0) {
-			UiSprite zero = new UiSprite("0", this.posX, this.posY);
+			UiSprite zero = new UiSprite("0", this.posX - xOff, this.posY);
 			zero.scale = this.scale;
 			this.sprites.add(zero);
 			this.room.addUiElement(zero);
 			return;
 		}
-		int xOff = 0;
 		while(temp > 0) {
 			int digit = temp % 10;
 			UiSprite sprite = new UiSprite(String.valueOf(digit), this.posX - xOff, this.posY);
@@ -79,6 +99,13 @@ public class UiNumberLabel {
 			this.room.addUiElement(sprite);
 			temp = temp / 10;
 			xOff += 8 * sprite.scale;
+		}
+		if(this.prefix != null) {
+			this.prefix.posX = this.posX - xOff - 10;
+			this.prefix.posY = this.posY;
+			this.prefix.scale = this.scale;
+			this.sprites.add(this.prefix);
+			this.room.addUiElement(this.prefix);
 		}
 	}
 	
