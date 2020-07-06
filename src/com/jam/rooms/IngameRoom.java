@@ -24,6 +24,7 @@ import com.jam.util.Util;
 public class IngameRoom extends Room {
 
 	private UiNumberLabel timeLabel;
+	private UiNumberLabel singleLabel;
 	private UiSprite timeUpSprite;
 	private UiSprite scrim;
 	private UiNumberLabel startTimeLabel;
@@ -45,6 +46,7 @@ public class IngameRoom extends Room {
 	private int selectedChar = -1;
 	private UiLine selectedLine = new UiLine(0f,0f,0f,0f);
 	private UiNumberLabel compatHighlight;
+	private int clickCooldown = 0;
 	
 	private int finalScore = 0;
 	private int timeBonus = 0;
@@ -91,6 +93,9 @@ public class IngameRoom extends Room {
 			a.doInitialRelationship(b);
 			this.makeCouple(a, b);
 		}
+		// add single label
+		this.singleLabel = new UiNumberLabel(this.countSingle(), 360, 240, this);
+		this.addUiElement(new UiSprite("single", 385, 240, 2f));
 	}
 
 	@Override
@@ -173,6 +178,10 @@ public class IngameRoom extends Room {
 			this.quitButton.sortingOrder = 20000;
 			this.quitButton.tint.a = 0f;
 		}
+		// cooldown
+		if(this.clickCooldown > 0) {
+			this.clickCooldown--;
+		}
 		// update couples
 		for(CoupleData couple : this.couples) {
 			couple.updateUi();
@@ -233,7 +242,7 @@ public class IngameRoom extends Room {
 		return c;
 	}
 	
-	public void makeCoupleWithSelected(CharacterActor other) {
+	private void makeCoupleWithSelected(CharacterActor other) {
 		CharacterActor selected = this.chars[this.selectedChar];
 		if(other == selected) {
 			this.selectedChar = -1;
@@ -255,7 +264,9 @@ public class IngameRoom extends Room {
 		this.hoveredChar = -1;
 		this.selectedLine.enabled = false;
 		// is everybody paired up?
-		if(this.countSingle() == 0) {
+		int singleCount = this.countSingle();
+		this.singleLabel.set(singleCount);
+		if(singleCount == 0) {
 			this.gameOver = true;
 			this.tempGameTimer = this.gameTimer;
 			this.gameTimer = 0f;
@@ -286,7 +297,7 @@ public class IngameRoom extends Room {
 		return this.gameOver;
 	}
 	
-	public void select(int idx) {
+	private void select(int idx) {
 		if(this.isSomeoneSelected() || idx < 0 || idx >= this.chars.length) {
 			return;
 		}
@@ -295,6 +306,16 @@ public class IngameRoom extends Room {
 	
 	public void hover(int idx) {
 		this.hoveredChar = idx;
+	}
+	
+	public void userClickedOn(int idx) {
+		if(this.clickCooldown > 0) return;
+		this.clickCooldown = 20;
+		if(!this.isSomeoneSelected()) {
+			this.select(idx);
+		} else {
+			this.makeCoupleWithSelected(this.chars[idx]);
+		}
 	}
 	
 	public boolean isSomeoneSelected() {

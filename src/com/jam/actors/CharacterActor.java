@@ -193,11 +193,7 @@ public class CharacterActor extends Actor {
 					ingame.hover(this.charIndex);
 				}
 				if(input.isMouseButtonPressed(MouseButton.LEFT)) {
-					if(!ingame.isSomeoneSelected()) {
-						ingame.select(this.charIndex);
-					} else {
-						ingame.makeCoupleWithSelected(this);
-					}
+					ingame.userClickedOn(this.charIndex);
 				}
 			} else if(this.tintState != 0) {
 				this.tintState = 0;
