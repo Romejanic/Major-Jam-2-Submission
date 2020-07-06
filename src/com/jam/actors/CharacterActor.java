@@ -25,6 +25,7 @@ public class CharacterActor extends Actor {
 	private float legMoveTime = 0f;
 	private int legState = 0;
 	private boolean isMale = false;
+	private boolean isSad = false;
 
 	private Vector3f compatabilityFactor;
 	private Vector3f happinessFactor;
@@ -99,7 +100,12 @@ public class CharacterActor extends Actor {
 	public void updateFace(float happiness) {
 		if(happiness <= 0.4f) {
 			this.replaceSprite(3, "head_" + this.spriteSuffix + "_sad");
+			this.isSad = true;
 		}
+	}
+	
+	public float getSadnessFactor() {
+		return this.isSad ? 0.4f : 1f;
 	}
 	
 	// align compatability and happiness factors so they are more

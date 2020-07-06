@@ -121,7 +121,12 @@ public class IngameRoom extends Room {
 		}
 		// update timer
 		this.gameTimer -= delta;
-		int intTimer = (int) Math.max(0, Math.ceil((double)this.gameTimer));
+		int intTimer = 0;
+		if(!this.gameOver) {
+			intTimer = (int)Math.max(0, Math.ceil((double)this.gameTimer));
+		} else {
+			intTimer = (int)Math.ceil((double)this.tempGameTimer);
+		}
 		if(this.timeLabel.get() != intTimer) {
 			this.timeLabel.set(intTimer);
 		}
@@ -248,6 +253,7 @@ public class IngameRoom extends Room {
 		this.makeCouple(selected, other);
 		this.selectedChar = -1;
 		this.hoveredChar = -1;
+		this.selectedLine.enabled = false;
 		// is everybody paired up?
 		if(this.countSingle() == 0) {
 			this.gameOver = true;
@@ -315,7 +321,7 @@ public class IngameRoom extends Room {
 		float compatSum = 0f;
 		float happySum = 0f;
 		for(CoupleData data : this.couples) {
-			compatSum += data.compat;
+			compatSum += data.compat * data.a.getSadnessFactor() * data.b.getSadnessFactor();
 			happySum += data.happy;
 		}
 		float compatAvg = compatSum / this.couples.size();
@@ -327,9 +333,9 @@ public class IngameRoom extends Room {
 		// percent happy
 		this.percentHappy = (int)(happyAvg * 100);
 		// single penalty
-		this.singlePenalty = this.countSingle() * 100;
+		this.singlePenalty = this.countSingle() * 200;
 		// final score
-		this.finalScore = baseScore + this.timeBonus + this.percentHappy - this.singlePenalty;
+		this.finalScore = Math.max(0, baseScore + this.timeBonus + this.percentHappy - this.singlePenalty);
 	}
 	
 	class CoupleData {
