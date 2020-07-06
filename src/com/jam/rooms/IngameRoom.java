@@ -299,6 +299,7 @@ public class IngameRoom extends Room {
 		this.couples.add(data);
 		a.updateFace(data.happy);
 		b.updateFace(data.happy);
+		data.updateUi();
 	}
 	
 	private CoupleData getCoupleFor(CharacterActor actor) {

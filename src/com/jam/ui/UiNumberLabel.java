@@ -6,7 +6,7 @@ import java.util.List;
 import com.jam.room.Room;
 
 public class UiNumberLabel {
-
+	
 	private final Room room;
 	
 	private int number;

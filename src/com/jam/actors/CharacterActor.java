@@ -57,6 +57,7 @@ public class CharacterActor extends Actor {
 		// heartbreak
 		this.heartbreakSprite = this.addSprite(new Sprite("heartbreak")).matchAspect();
 		this.heartbreakSprite.enabled = false;
+		this.heartbreakSprite.sortingOrder = 50;
 		// factors
 		this.compatabilityFactor = Util.getRandomUnitDirection();
 		this.happinessFactor = Util.getRandomUnitDirection();
