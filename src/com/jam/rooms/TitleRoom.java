@@ -41,7 +41,7 @@ public class TitleRoom extends Room {
 		// play button
 		this.addUiElement(new UiButton("btn_play", -40, 0, this).addListener(() -> {
 			if(this.toGame != null) return;
-			this.toGame = TitleRoom.this.addUiElement(new RoomTransition(IngameRoom.class));
+			this.toGame = this.addUiElement(new RoomTransition(TutorialRoom.class));
 		}));
 		// quit button
 		this.addUiElement(new UiButton("btn_quit", 40, 0, this).addListener(() -> {
