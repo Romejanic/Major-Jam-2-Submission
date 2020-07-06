@@ -19,6 +19,7 @@ public class CharacterActor extends Actor {
 	private Sprite head;
 	private Sprite leftLeg;
 	private Sprite rightLeg;
+	private Sprite heartbreakSprite;
 	private final String spriteSuffix;
 	
 	private float animTime = 0f;
@@ -53,6 +54,9 @@ public class CharacterActor extends Actor {
 		// head sprite
 		this.head = this.addSprite(new Sprite("head_" + this.spriteSuffix).matchAspect());
 		this.head.transform.position.y = 1.85f;
+		// heartbreak
+		this.heartbreakSprite = this.addSprite(new Sprite("heartbreak")).matchAspect();
+		this.heartbreakSprite.enabled = false;
 		// factors
 		this.compatabilityFactor = Util.getRandomUnitDirection();
 		this.happinessFactor = Util.getRandomUnitDirection();
@@ -101,7 +105,11 @@ public class CharacterActor extends Actor {
 		if(happiness <= 0.4f) {
 			this.replaceSprite(3, "head_" + this.spriteSuffix + "_sad");
 			this.isSad = true;
+		} else {
+			this.replaceSprite(3, "head_" + this.spriteSuffix);
+			this.isSad = false;
 		}
+		this.heartbreakSprite.enabled = this.isSad;
 	}
 	
 	public float getSadnessFactor() {

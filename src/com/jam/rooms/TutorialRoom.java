@@ -1,7 +1,6 @@
 package com.jam.rooms;
 
 import com.jam.math.Color;
-import com.jam.math.Transform2D;
 import com.jam.room.Room;
 import com.jam.room.RoomTransition;
 import com.jam.ui.UiButton;

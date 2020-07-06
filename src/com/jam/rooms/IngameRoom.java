@@ -257,6 +257,14 @@ public class IngameRoom extends Room {
 		return c;
 	}
 	
+	private void endCouple(CoupleData couple) {
+		if(couple == null) return;
+		couple.end();
+		couple.a.breakup(couple.happy);
+		couple.b.breakup(couple.happy);
+		this.couples.remove(couple);
+	}
+	
 	private void makeCoupleWithSelected(CharacterActor other) {
 		CharacterActor selected = this.chars[this.selectedChar];
 		if(other == selected) {
@@ -266,16 +274,8 @@ public class IngameRoom extends Room {
 		}
 		CoupleData aCouple = this.getCoupleFor(selected);
 		CoupleData bCouple = this.getCoupleFor(other);
-		if(aCouple != null) {
-			aCouple.end();
-			selected.breakup(aCouple.happy);
-			this.couples.remove(aCouple);
-		}
-		if(bCouple != null) {
-			bCouple.end();
-			other.breakup(bCouple.happy);
-			this.couples.remove(bCouple);
-		}
+		this.endCouple(aCouple);
+		this.endCouple(bCouple);
 		this.makeCouple(selected, other);
 		this.selectedChar = -1;
 		this.hoveredChar = -1;
@@ -386,7 +386,7 @@ public class IngameRoom extends Room {
 			this.a = a;
 			this.b = b;
 			this.compat = a.getCompatabilityScore(b);
-			this.happy = b.getCompatabilityScore(b);
+			this.happy = a.getHappinessScore(b);
 			
 			IngameRoom room = IngameRoom.this;
 			this.compatNum = new UiNumberLabel((int)(this.compat*100f), 0, 0, 2f, true, room).setPrefix("compat");
@@ -421,6 +421,10 @@ public class IngameRoom extends Room {
 			for(UiLine line : this.lines) {
 				IngameRoom.this.removeUiElement(line);
 			}
+		}
+		
+		public int hashCode() {
+			return this.a.hashCode() * this.b.hashCode();
 		}
 	}
 	
