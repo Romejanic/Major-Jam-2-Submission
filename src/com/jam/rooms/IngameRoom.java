@@ -269,10 +269,12 @@ public class IngameRoom extends Room {
 		if(aCouple != null) {
 			aCouple.end();
 			selected.breakup(aCouple.happy);
+			this.couples.remove(aCouple);
 		}
 		if(bCouple != null) {
 			bCouple.end();
 			other.breakup(bCouple.happy);
+			this.couples.remove(bCouple);
 		}
 		this.makeCouple(selected, other);
 		this.selectedChar = -1;
@@ -415,6 +417,7 @@ public class IngameRoom extends Room {
 		
 		private void end() {
 			this.compatNum.remove();
+			this.happyNum.remove();
 			for(UiLine line : this.lines) {
 				IngameRoom.this.removeUiElement(line);
 			}
