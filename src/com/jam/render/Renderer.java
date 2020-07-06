@@ -76,6 +76,7 @@ public class Renderer {
 		this.spriteRenderer.clearBatches();
 		this.uiRenderer.clearBatches();
 		this.tilemapRenderer.clearBatches();
+		System.gc(); // garbage collect the old graphics
 	}
 	
 	public void updateSize(int width, int height) {

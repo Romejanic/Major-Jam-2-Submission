@@ -89,6 +89,7 @@ public class UiRenderer {
 	protected void clearBatches() {
 		this.sprites.clear();
 		this.queuedSprites.clear();
+		this.lines.clear();
 	}
 
 	private void updateProjMat(int w, int h) {

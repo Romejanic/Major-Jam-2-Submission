@@ -156,10 +156,12 @@ public class IngameRoom extends Room {
 			this.retryButton = this.addUiElement(new UiButton("btn_play", -40, -180, this)).addListener(() -> {
 				if(this.toRoom != null) return;
 				this.toRoom = this.addUiElement(new RoomTransition(IngameRoom.class));
+				this.toRoom.sortingOrder = 30000;
 			});
 			this.quitButton = this.addUiElement(new UiButton("btn_quit", 40, -180, this)).addListener(() -> {
 				if(this.toRoom != null) return;
 				this.toRoom = this.addUiElement(new RoomTransition(TitleRoom.class));
+				this.toRoom.sortingOrder = 30000;
 			});
 			this.retryButton.sortingOrder = 20000;
 			this.retryButton.tint.a = 0f;
