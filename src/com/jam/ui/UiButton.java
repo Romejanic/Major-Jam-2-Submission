@@ -56,6 +56,11 @@ public class UiButton extends UiSprite {
 		} else if(!this.tintOnly) {
 			this.overlaySprite.tint = Color.WHITE;
 		}
+		// update vars
+		if(!this.tintOnly) {
+			this.overlaySprite.sortingOrder = this.sortingOrder + 1;
+			this.overlaySprite.tint = this.tint;
+		}
 	}
 
 	private boolean isMouseOver() {

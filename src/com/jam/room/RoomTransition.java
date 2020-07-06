@@ -15,8 +15,8 @@ public class RoomTransition extends UiSprite {
 		super("white", 0, 0);
 		this.room = room;
 		this.totalTime = totalTime;
-		this.width = 500;
-		this.height = 500;
+		this.width = Main.getInstance().getFrameWidth();
+		this.height = Main.getInstance().getFrameHeight();
 		this.tint = new Color(0f,0f,0f,0f);
 		this.sortingOrder = 1000;
 	}

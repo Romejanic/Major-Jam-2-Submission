@@ -14,6 +14,8 @@ import com.jam.math.Color;
 import com.jam.render.Camera;
 import com.jam.render.tilemap.Tilemap;
 import com.jam.room.Room;
+import com.jam.room.RoomTransition;
+import com.jam.ui.UiButton;
 import com.jam.ui.UiLine;
 import com.jam.ui.UiNumberLabel;
 import com.jam.ui.UiSprite;
@@ -25,6 +27,11 @@ public class IngameRoom extends Room {
 	private UiSprite timeUpSprite;
 	private UiSprite scrim;
 	private UiNumberLabel startTimeLabel;
+	
+	private UiSprite summary;
+	private UiNumberLabel[] summaryNums;
+	private UiButton retryButton;
+	private UiButton quitButton;
 	
 	private float startTimer = 3f;
 	private float gameTimer = 60f;
@@ -38,6 +45,13 @@ public class IngameRoom extends Room {
 	private int selectedChar = -1;
 	private UiLine selectedLine = new UiLine(0f,0f,0f,0f);
 	private UiNumberLabel compatHighlight;
+	
+	private int finalScore = 0;
+	private int timeBonus = 0;
+	private int percentHappy = 0;
+	private int singlePenalty = 0;
+	private float tempGameTimer = 0f;
+	private RoomTransition toRoom;
 	
 	@Override
 	public void populate() {
@@ -83,8 +97,12 @@ public class IngameRoom extends Room {
 	public void updateRoom(float delta) {
 		// show results
 		if(this.showResults) {
-			if(this.scrim.tint.a < 1f) {
-				this.scrim.tint.a = Math.min(1f, this.scrim.tint.a + delta);
+			this.fadeIn(this.scrim, delta);
+			this.fadeIn(this.summary, delta);
+			this.fadeIn(this.retryButton, delta);
+			this.fadeIn(this.quitButton, delta);
+			if(this.toRoom != null) {
+				this.toRoom.update(delta);
 			}
 			return;
 		}
@@ -107,16 +125,54 @@ public class IngameRoom extends Room {
 		if(this.timeLabel.get() != intTimer) {
 			this.timeLabel.set(intTimer);
 		}
+		// go to summary screen
 		if(this.gameTimer < -5f) {
 			this.showResults = true;
 			this.scrim.tint = new Color(0.76f, 0.01f, 1f, 0f);
+			this.summary = this.addUiElement(new UiSprite("summary", -200, 0, 4f));
+			this.summary.tint.a = 0f;
+			this.summary.sortingOrder = 20000;
+			this.calcFinalScores();
+			int y = 85;
+			this.summaryNums = new UiNumberLabel[4];
+			for(int i = 0; i < this.summaryNums.length; i++) {
+				int val = 0;
+				switch(i) { // i'm so sorry for this
+				case 0:
+					val = this.finalScore; break;
+				case 1:
+					val = this.timeBonus; break;
+				case 2:
+					val = this.percentHappy; break;
+				case 3:
+					val = this.singlePenalty; break;
+				default:
+					break;
+				}
+				this.summaryNums[i] = new UiNumberLabel(val, 200, y, 4f, i == 2, this);
+				this.summaryNums[i].setSortingLayer(20000);
+				y -= 60;
+			}
+			this.retryButton = this.addUiElement(new UiButton("btn_play", -40, -180, this)).addListener(() -> {
+				if(this.toRoom != null) return;
+				this.toRoom = this.addUiElement(new RoomTransition(IngameRoom.class));
+			});
+			this.quitButton = this.addUiElement(new UiButton("btn_quit", 40, -180, this)).addListener(() -> {
+				if(this.toRoom != null) return;
+				this.toRoom = this.addUiElement(new RoomTransition(TitleRoom.class));
+			});
+			this.retryButton.sortingOrder = 20000;
+			this.retryButton.tint.a = 0f;
+			this.quitButton.sortingOrder = 20000;
+			this.quitButton.tint.a = 0f;
 		}
 		// update couples
 		for(CoupleData couple : this.couples) {
 			couple.updateUi();
 		}
 		// gameover
-		if(intTimer == 0) {
+		if(intTimer == 0 || this.gameOver) {
+			this.gameOver = true;
 			if(this.timeUpSprite == null) {
 				this.timeUpSprite = this.addUiElement(new UiSprite("time_up", 0, 0));
 				this.timeUpSprite.scale = 10f;
@@ -126,9 +182,9 @@ public class IngameRoom extends Room {
 				this.timeUpSprite.scale -= delta;
 				this.timeUpSprite.scale = Math.max(6f, this.timeUpSprite.scale);
 			}
-			if(this.timeUpSprite.tint.a < 1f) {
-				this.timeUpSprite.tint.a += delta;
-				this.timeUpSprite.tint.a = Math.min(1f, this.timeUpSprite.tint.a);
+			this.fadeIn(this.timeUpSprite, delta);
+			if(this.scrim.tint.a > 0f) {
+				this.scrim.tint.a = Math.max(0f, this.scrim.tint.a - delta);
 			}
 		}
 		// selection ui
@@ -190,6 +246,15 @@ public class IngameRoom extends Room {
 		this.makeCouple(selected, other);
 		this.selectedChar = -1;
 		this.hoveredChar = -1;
+		// is everybody paired up?
+		if(this.countSingle() == 0) {
+			this.gameOver = true;
+			this.tempGameTimer = this.gameTimer;
+			this.gameTimer = 0f;
+			this.timeUpSprite = this.addUiElement(new UiSprite("done", 0, 0));
+			this.timeUpSprite.scale = 10f;
+			this.timeUpSprite.tint.a = 0f;
+		}
 	}
 	
 	private void makeCouple(CharacterActor a, CharacterActor b) {
@@ -226,6 +291,43 @@ public class IngameRoom extends Room {
 	
 	public boolean isSomeoneSelected() {
 		return this.selectedChar != -1;
+	}
+	
+	private boolean fadeIn(UiSprite sprite, float delta) {
+		boolean flag = sprite.tint.a < 1f;
+		if(flag) {
+			sprite.tint.a = Math.min(1f, sprite.tint.a + delta);
+		}
+		return flag;
+	}
+	
+	private int countSingle() {
+		int count = 0;
+		for(CharacterActor ca : this.chars) {
+			if(!ca.isInCouple()) count++;
+		}
+		return count;
+	}
+	
+	private void calcFinalScores() {
+		float compatSum = 0f;
+		float happySum = 0f;
+		for(CoupleData data : this.couples) {
+			compatSum += data.compat;
+			happySum += data.happy;
+		}
+		float compatAvg = compatSum / this.couples.size();
+		float happyAvg = happySum / this.couples.size();
+		// base score
+		int baseScore = (int)(compatAvg * 5000);
+		// time bonus
+		this.timeBonus = (int)Math.max(0f, this.tempGameTimer * 100f);
+		// percent happy
+		this.percentHappy = (int)(happyAvg * 100);
+		// single penalty
+		this.singlePenalty = this.countSingle() * 100;
+		// final score
+		this.finalScore = baseScore + this.timeBonus + this.percentHappy - this.singlePenalty;
 	}
 	
 	class CoupleData {
