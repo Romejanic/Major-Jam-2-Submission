@@ -207,4 +207,11 @@ public class CharacterActor extends Actor {
 		return this.isMale;
 	}
 
+	@Override
+	public boolean equals(Object other) {
+		if(other == null) return false;
+		if(!(other instanceof CharacterActor)) return false;
+		return ((CharacterActor)other).charIndex == this.charIndex;
+	}
+	
 }

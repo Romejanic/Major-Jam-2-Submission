@@ -8,9 +8,11 @@ import org.joml.Vector3f;
 
 import com.jam.actors.CharacterActor;
 import com.jam.input.InputManager;
+import com.jam.input.Key;
 import com.jam.input.MouseButton;
 import com.jam.main.Main;
 import com.jam.math.Color;
+import com.jam.math.Transform2D;
 import com.jam.render.Camera;
 import com.jam.render.tilemap.Tilemap;
 import com.jam.room.Room;
@@ -123,6 +125,19 @@ public class IngameRoom extends Room {
 		if(this.startTimeLabel != null) {
 			this.startTimeLabel.remove();
 			this.startTimeLabel = null;
+		}
+		// move camera
+		if(!this.gameOver) {
+			float camSpeed = 10f * delta;
+			float leftRight = 0f;
+			if(Main.getInput().isKeyDown(Key.MOVE_LEFT)) {
+				leftRight -= 1f;
+			} else if(Main.getInput().isKeyDown(Key.MOVE_RIGHT)) {
+				leftRight += 1f;
+			}
+			Transform2D camTransform = this.getCamera().transform;
+			camTransform.position.x += leftRight * camSpeed;
+			camTransform.position.x = Math.max(-15f, Math.min(15f, camTransform.position.x));
 		}
 		// update timer
 		this.gameTimer -= delta;
@@ -286,7 +301,7 @@ public class IngameRoom extends Room {
 	
 	private CoupleData getCoupleFor(CharacterActor actor) {
 		for(CoupleData data : this.couples) {
-			if(data.a == actor || data.b == actor) {
+			if(data.a.equals(actor) || data.b.equals(actor)) {
 				return data;
 			}
 		}

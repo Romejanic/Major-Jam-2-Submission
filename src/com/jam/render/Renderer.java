@@ -73,6 +73,7 @@ public class Renderer {
 	}
 	
 	public void clearBatches() {
+		this.camera.transform.identity();
 		this.spriteRenderer.clearBatches();
 		this.uiRenderer.clearBatches();
 		this.tilemapRenderer.clearBatches();
